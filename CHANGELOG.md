@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 - Implemented Sonarr and Radarr integration modules with a new `/metadata/sync`
   endpoint and client CLI option `--sync-metadata`.
+- Added `/media` and `/stream/{id}` endpoints for listing and streaming media
+  items.
+- Enhanced `client/main.py` with `argparse` subcommands (`ping`, `sync`, `list`,
+  `play`) and streaming via external players.
+- Documented new CLI usage and recorded the rationale in POSTERITY.
 - Documented external API key setup and updated architecture overview.
 - Added architecture overview in `docs/architecture.md` and updated
   documentation references.

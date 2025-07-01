@@ -42,6 +42,12 @@ additional security layers such as rate limiting.
   the CLI to connect without command line arguments. This structure avoids
   hardcoding paths in code while remaining simple to maintain.
 
+- **CLI Subcommands** were added to make the client extensible. Using
+  `argparse` subparsers keeps the command structure clear as more features are
+  introduced. Streaming support relies on external players like `ffplay` which
+  allows us to avoid embedding complex media libraries while still enabling
+  playback over authenticated HTTP endpoints.
+
 These choices support long-term maintainability, scalability, and a secure
 media server environment. Keep this document updated when new decisions are
 made.

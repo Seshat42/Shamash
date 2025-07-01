@@ -110,6 +110,14 @@ def get_media_item(item_id: int) -> Optional[MediaItem]:
     return item
 
 
+def list_media_items() -> list[MediaItem]:
+    """Return all media items."""
+    session = get_session()
+    items = session.scalars(select(MediaItem)).all()
+    session.close()
+    return list(items)
+
+
 def update_media_item(item_id: int, **fields: str) -> bool:
     """Update fields on a media item."""
     session = get_session()

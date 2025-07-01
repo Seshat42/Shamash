@@ -26,6 +26,9 @@ Follow these guidelines when contributing:
 - **Configuration**: YAML files in `config/` provide default settings for the
   server and client. Update `config/default.yaml` and `config/client.yaml` when
   introducing new options.
+- **Client CLI**: Use subcommands (`ping`, `sync`, `list`, `play`) implemented
+  with `argparse` in `client/main.py`. Pass `--token` when calling endpoints
+  that require authentication.
 - **Server Framework**: The API uses FastAPI served by uvicorn. Add new
   endpoints via routers in `server/app.py` to keep the application modular.
 - **Authentication**: JWT utilities live in `server/auth.py`. Use
