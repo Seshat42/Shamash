@@ -1,0 +1,36 @@
+# Architecture Overview
+
+Shamash is organized into four primary modules:
+
+1. **Media Ingestion** – handles importing IPTV streams and local files. It
+   communicates with the streaming module to provide content.
+2. **Metadata Synchronization** – integrates with Sonarr and Radarr to keep
+   information about series and movies up to date.
+3. **User Management** – maintains accounts, permissions, and preferences in a
+   dedicated database.
+4. **Streaming** – serves media to clients using HTTP. It coordinates with the
+   caching layer for performance.
+
+A simplified diagram of these interactions is shown below:
+
+```text
++---------+       +---------------+       +-----------+
+| Client  | <---> | Shamash API   | <---- | Database  |
++---------+       +---------------+       +-----------+
+      ^                 ^    ^                ^
+      |                 |    |                |
+      |                 |    +--> Caching ----+
+      |                 +----------+         |
+      |                            |         |
+      |   +--------------------+   |   +-------------+
+      +---| Streaming Module   |<--+-->| Media       |
+          +--------------------+       | Ingestion   |
+                 ^                     +-------------+
+                 |
+                 +--> Metadata Sync (Sonarr/Radarr)
+```
+
+The server exposes a REST interface consumed by the client. External services
+like Sonarr and Radarr interact with the metadata module, while the database and
+cache provide state and speed. Each component can run independently, allowing
+Shamash to scale horizontally.

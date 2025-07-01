@@ -10,6 +10,8 @@ Follow these guidelines when contributing:
   - `server/` contains server-side code.
   - `client/` contains client-side code.
   - `docs/` holds documentation.
+  - `docs/architecture.md` contains the high-level architecture diagram. Update
+    it when major components or external integrations change.
 - **Branching**: Work from short-lived feature branches off `main`. Open a
   pull request when ready for review.
 - **Documentation**: Keep `README.md`, `AGENTS.md`, `POSTERITY.md`, and

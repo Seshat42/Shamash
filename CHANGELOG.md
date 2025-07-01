@@ -3,7 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
-- Placeholder for upcoming changes.
+- Added architecture overview in `docs/architecture.md` and updated
+  documentation references.
 
 ## [0.1.0] - 2025-07-01
 - Initial project structure with server, client, and documentation directories.

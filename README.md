@@ -44,4 +44,5 @@ Configure Sonarr and Radarr to download media into directories that Shamash can 
 
 Provide your IPTV playlist URL and any required credentials through the Shamash configuration file (to be implemented). The server will stream channels from this playlist alongside your local media library.
 
-See the [`docs/`](docs/README.md) directory for additional design notes.
+See the [`docs/`](docs/README.md) directory for additional design notes,
+including a high-level [architecture overview](docs/architecture.md).
