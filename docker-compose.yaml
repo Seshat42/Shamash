@@ -1,0 +1,36 @@
+version: '3.9'
+services:
+    server:
+        build: .
+        ports:
+            - "8000:8000"
+        volumes:
+            - ./server:/app/server
+            - ./config:/app/config
+        environment:
+            - SHAMASH_DB_PATH=/app/server/shamash.db
+    sonarr:
+        image: linuxserver/sonarr
+        ports:
+            - "8989:8989"
+        volumes:
+            - sonarr_config:/config
+            - /path/to/downloads:/downloads
+        environment:
+            - PUID=1000
+            - PGID=1000
+        restart: unless-stopped
+    radarr:
+        image: linuxserver/radarr
+        ports:
+            - "7878:7878"
+        volumes:
+            - radarr_config:/config
+            - /path/to/downloads:/downloads
+        environment:
+            - PUID=1000
+            - PGID=1000
+        restart: unless-stopped
+volumes:
+    sonarr_config:
+    radarr_config:
