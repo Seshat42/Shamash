@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- Added Dockerfile and `docker-compose.yaml` for containerized deployment and
+  documented usage.
 - Implemented Sonarr and Radarr integration modules with a new `/metadata/sync`
   endpoint and client CLI option `--sync-metadata`.
 - Added `/media` and `/stream/{id}` endpoints for listing and streaming media

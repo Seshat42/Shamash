@@ -41,10 +41,13 @@ Follow these guidelines when contributing:
   `server/models.py`. Set the `SHAMASH_DB_PATH` environment variable to point to
   an alternate database when running tests.
 
-- **External API Keys**: Integrations with Sonarr and Radarr require API keys.
-  Set the `SONARR_API_KEY` and `RADARR_API_KEY` environment variables so the
-  server can authenticate to these services. Optionally adjust `SONARR_URL` and
-  `RADARR_URL` if the services run on non-default ports.
+  - **External API Keys**: Integrations with Sonarr and Radarr require API keys.
+    Set the `SONARR_API_KEY` and `RADARR_API_KEY` environment variables so the
+    server can authenticate to these services. Optionally adjust `SONARR_URL` and
+    `RADARR_URL` if the services run on non-default ports.
+  - **Containerization**: Build the server image with `docker build -t shamash .`
+    and launch it with `docker-compose up`. Compose also starts optional Sonarr
+    and Radarr containers for metadata syncing.
 
 General workflow:
 1. Create a feature branch.

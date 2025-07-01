@@ -97,6 +97,24 @@ Use `systemd` or a similar tool to manage the service and enable restarts.
 See the [`docs/`](docs/README.md) directory for additional design notes,
 including a high-level [architecture overview](docs/architecture.md).
 
+## Docker Setup
+
+Build the server image using the included `Dockerfile`:
+
+```bash
+docker build -t shamash .
+```
+
+Start the API along with optional Sonarr and Radarr containers via
+`docker-compose`:
+
+```bash
+docker-compose up
+```
+
+This configuration mounts the repository into the container so code changes are
+reflected immediately during development.
+
 ## Testing
 
 Run the test suite locally before committing changes. Tests live in the
