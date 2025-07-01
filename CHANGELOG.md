@@ -31,6 +31,9 @@ All notable changes to this project will be documented in this file.
 - Expanded README with configuration, authentication and production sections.
 - Documented module directory purposes and troubleshooting tips in `docs/README.md`.
 - Updated AGENTS and POSTERITY to reference the new documentation files.
+- Added directory structure, testing workflow and style reminder sections to
+  `AGENTS.md`.
+- Documented reasons for FastAPI, JWT and SQLite usage in `POSTERITY.md`.
 
 ## [0.1.0] - 2025-07-01
 - Initial project structure with server, client, and documentation directories.

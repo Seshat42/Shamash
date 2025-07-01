@@ -8,6 +8,10 @@ These notes explain why we follow the guidelines in `AGENTS.md`.
   history and design decisions.
 - **Architecture Overview** in `docs/architecture.md` illustrates how modules
   interact and guides scalability planning.
+- **Separation of Concerns** is enforced by dividing the codebase into
+  independent modules for ingestion, metadata, streaming and authentication.
+  This clarity enables focused tests and limits the blast radius of
+  security-sensitive code.
 - **Testing** before committing avoids pushing broken code and maintains
   reliability.
 - **Local Test Execution** keeps the CI pipeline minimal and fast. Developers
@@ -29,10 +33,15 @@ These notes explain why we follow the guidelines in `AGENTS.md`.
 Running the API in this manner ensures we can restrict open ports and apply
 additional security layers such as rate limiting.
 
+- **SQLite as initial storage** keeps the project simple to set up while we
+  iterate on the schema. A single file database means no external dependencies
+  and easy cleanup during testing. SQLAlchemy abstracts queries so moving to a
+  dedicated database later will require minimal code changes.
+
 - **JWT Authentication** was introduced to secure the API while keeping the
   implementation lightweight. Tokens allow stateless auth so we can scale the
   service horizontally without session affinity. Storing credentials hashed in
- SQLite keeps dependencies minimal during early development. We now use
+  SQLite keeps dependencies minimal during early development. We now use
   SQLAlchemy to manage database access so models can evolve without manual SQL
   and to simplify future migrations.
 
