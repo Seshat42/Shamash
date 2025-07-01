@@ -57,3 +57,37 @@ General workflow:
 5. Push the branch and open a pull request.
 
 For the reasoning behind these conventions see `POSTERITY.md`.
+
+## Directory Structure
+
+```
+/server    - FastAPI application modules
+    /integrations - Sonarr and Radarr helpers
+    auth.py       - JWT utilities
+    db.py         - database operations
+    models.py     - SQLAlchemy models
+/client    - command line interface
+/config    - YAML settings loaded at runtime
+/docs      - documentation sources
+/tests     - pytest suite executed locally
+```
+
+Keeping these areas separate clarifies responsibility boundaries and reduces
+coupling between features.
+
+## Testing Workflow
+
+Run `pytest` before every commit. The test suite creates a temporary SQLite
+database by setting `SHAMASH_DB_PATH` so it will not affect real data. When
+tests are absent, compile modules with `python -m py_compile */*.py` and launch
+scripts manually to ensure they start without errors. Tests should avoid
+network dependencies and remain self-contained.
+
+## Coding Style Reminders
+
+Use four spaces for indentation and provide docstrings for all modules,
+classes and functions. Name variables and functions with `snake_case` and
+classes with `PascalCase`. Keep functions focused on one task. Never embed
+credentials in the codebase; load secrets from environment variables or
+configuration files and store passwords hashed. JWT tokens protect API routes,
+so ensure endpoints validate them with `token_required`.
