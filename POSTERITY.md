@@ -16,6 +16,12 @@ These notes explain why we follow the guidelines in `AGENTS.md`.
   solutions while still supporting personal libraries.
 - **Security** is prioritized by running services with minimal privileges and
   limiting network exposure.
+- **FastAPI and uvicorn** were selected for the server implementation due to
+  their lightweight footprint and strong async support. Running uvicorn through
+  our entry script keeps configuration simple while allowing production
+  deployments to front the service with a reverse proxy for HTTPS termination.
+  Running the API in this manner ensures we can restrict open ports and apply
+  additional security layers such as rate limiting.
 
 These choices support long-term maintainability, scalability, and a secure
 media server environment. Keep this document updated when new decisions are

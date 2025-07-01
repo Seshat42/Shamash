@@ -1,12 +1,20 @@
-"""Simple placeholder web server for Shamash media server."""
+"""Entry point for the Shamash FastAPI server."""
 
 import argparse
-from http.server import HTTPServer, SimpleHTTPRequestHandler
+
+import uvicorn
+
+from app import app
 
 
-def parse_args():
+def parse_args() -> argparse.Namespace:
     """Parse command line arguments for server configuration."""
-    parser = argparse.ArgumentParser(description="Start the Shamash server.")
+    parser = argparse.ArgumentParser(description="Start the Shamash API server.")
+    parser.add_argument(
+        "--host",
+        default="0.0.0.0",
+        help="Host address to bind (default: 0.0.0.0)",
+    )
     parser.add_argument(
         "--port",
         type=int,
@@ -16,14 +24,11 @@ def parse_args():
     return parser.parse_args()
 
 
-def run_server(port: int) -> None:
-    """Run a basic HTTP server on the specified port."""
-    server_address = ("", port)
-    httpd = HTTPServer(server_address, SimpleHTTPRequestHandler)
-    print(f"Shamash server running on http://localhost:{port}")
-    httpd.serve_forever()
+def main() -> None:
+    """Run the FastAPI application with uvicorn."""
+    args = parse_args()
+    uvicorn.run(app, host=args.host, port=args.port)
 
 
 if __name__ == "__main__":
-    args = parse_args()
-    run_server(args.port)
+    main()

@@ -14,17 +14,21 @@ Shamash is an experimental media server and client. It focuses on IPTV streaming
    git clone https://github.com/yourorg/shamash.git
    cd shamash
    ```
-2. Install dependencies. The server and client currently rely only on the Python standard library, so there is no `requirements.txt` yet. Future versions will document additional dependencies here.
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 ## Running the Server
 
-Run the server from the repository root:
+Run the server from the repository root. `server/main.py` launches `uvicorn` to
+serve the FastAPI application:
 
 ```bash
-python server/main.py --port 8000
+python server/main.py --host 0.0.0.0 --port 8000
 ```
 
-The server starts an HTTP service on the given port and serves files from the current directory.
+The server starts an HTTP API on the specified host and port.
 
 ## Running the Client
 
