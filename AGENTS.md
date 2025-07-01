@@ -21,6 +21,8 @@ Follow these guidelines when contributing:
 - **Testing**: Run available tests before committing. If no tests exist,
   run `python -m py_compile */*.py` and execute the scripts to ensure they
   start without errors.
+- **Server Framework**: The API uses FastAPI served by uvicorn. Add new
+  endpoints via routers in `server/app.py` to keep the application modular.
 
 General workflow:
 1. Create a feature branch.
