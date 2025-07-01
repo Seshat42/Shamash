@@ -38,13 +38,18 @@ future management endpoint. Obtain a token via `/auth/login` and pass it as a
 
 ## Running the Client
 
-Run the client and specify the server URL if different from the default:
+Use the client subcommands to interact with the server:
 
 ```bash
-python client/main.py http://localhost:8000
-```
+# Ping the API
+python client/main.py ping --server-url http://localhost:8000
 
-The client simply pings the server and prints the HTTP status. It will be expanded in future releases.
+# List available media (requires a token)
+python client/main.py list --token YOUR_TOKEN
+
+# Play an item with ffplay
+python client/main.py play 1 --token YOUR_TOKEN --player ffplay
+```
 
 ## Configuration Files
 
