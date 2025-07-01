@@ -4,7 +4,7 @@ import argparse
 
 import uvicorn
 
-from app import app
+from .app import app
 
 
 def parse_args() -> argparse.Namespace:

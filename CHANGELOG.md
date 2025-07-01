@@ -8,6 +8,9 @@ All notable changes to this project will be documented in this file.
 - Migrated server to FastAPI with uvicorn and added module routers.
 - Added `requirements.txt` with development dependencies.
 - Updated documentation to reflect new server startup instructions.
+- Implemented JWT authentication with `/auth/login` and protected routes.
+- Stored hashed credentials in SQLite via `server/db.py`.
+- Documented token usage and updated contributor guidelines and posterity notes.
 
 ## [0.1.0] - 2025-07-01
 - Initial project structure with server, client, and documentation directories.

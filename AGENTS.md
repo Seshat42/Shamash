@@ -23,6 +23,9 @@ Follow these guidelines when contributing:
   start without errors.
 - **Server Framework**: The API uses FastAPI served by uvicorn. Add new
   endpoints via routers in `server/app.py` to keep the application modular.
+- **Authentication**: JWT utilities live in `server/auth.py`. Use
+  `token_required` as a dependency on protected endpoints. Credentials are
+  stored hashed in the SQLite database managed by `server/db.py`.
 
 General workflow:
 1. Create a feature branch.

@@ -20,8 +20,13 @@ These notes explain why we follow the guidelines in `AGENTS.md`.
   their lightweight footprint and strong async support. Running uvicorn through
   our entry script keeps configuration simple while allowing production
   deployments to front the service with a reverse proxy for HTTPS termination.
-  Running the API in this manner ensures we can restrict open ports and apply
-  additional security layers such as rate limiting.
+Running the API in this manner ensures we can restrict open ports and apply
+additional security layers such as rate limiting.
+
+- **JWT Authentication** was introduced to secure the API while keeping the
+  implementation lightweight. Tokens allow stateless auth so we can scale the
+  service horizontally without session affinity. Storing credentials hashed in
+  SQLite keeps dependencies minimal during early development.
 
 These choices support long-term maintainability, scalability, and a secure
 media server environment. Keep this document updated when new decisions are

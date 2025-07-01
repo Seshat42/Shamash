@@ -1,6 +1,8 @@
 """FastAPI application for the Shamash media server."""
 
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, Depends
+
+from .auth import auth_router, token_required
 
 
 # Placeholder routers for future modules
@@ -29,8 +31,8 @@ async def users_ping() -> dict[str, str]:
 
 
 @streaming_router.get("/ping")
-async def stream_ping() -> dict[str, str]:
-    """Check the streaming module."""
+async def stream_ping(_: str = Depends(token_required)) -> dict[str, str]:
+    """Check the streaming module. Requires a valid token."""
     return {"status": "streaming placeholder"}
 
 
@@ -42,6 +44,7 @@ def create_app() -> FastAPI:
     app.include_router(metadata_sync_router)
     app.include_router(user_management_router)
     app.include_router(streaming_router)
+    app.include_router(auth_router)
 
     return app
 
