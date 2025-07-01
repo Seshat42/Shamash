@@ -26,6 +26,9 @@ All notable changes to this project will be documented in this file.
 - Introduced YAML configuration files under `config/` and loader module.
 - Client now reads default server URL from `config/client.yaml`.
 - Documented configuration format and rationale in README and POSTERITY.
+- Expanded README with configuration, authentication and production sections.
+- Documented module directory purposes and troubleshooting tips in `docs/README.md`.
+- Updated AGENTS and POSTERITY to reference the new documentation files.
 
 ## [0.1.0] - 2025-07-01
 - Initial project structure with server, client, and documentation directories.

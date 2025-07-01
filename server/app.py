@@ -43,7 +43,7 @@ async def metadata_sync() -> dict[str, str]:
 
 
 @media_router.get("/")
-async def list_media(_: str = Depends(token_required)) -> list[dict[str, str]]:
+async def list_media(_: str = Depends(token_required)) -> list[dict]:
     """Return all available media items."""
     items = db.list_media_items()
     return [

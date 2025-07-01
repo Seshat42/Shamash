@@ -12,6 +12,8 @@ Follow these guidelines when contributing:
   - `docs/` holds documentation.
   - `docs/architecture.md` contains the high-level architecture diagram. Update
     it when major components or external integrations change.
+  - `docs/README.md` explains each module directory and includes troubleshooting
+    tips. Keep it current as the codebase evolves.
 - **Branching**: Work from short-lived feature branches off `main`. Open a
   pull request when ready for review.
 - **Documentation**: Keep `README.md`, `AGENTS.md`, `POSTERITY.md`, and
