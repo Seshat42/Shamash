@@ -28,6 +28,11 @@ def parse_args() -> argparse.Namespace:
         default=get_default_url(),
         help="URL of the Shamash server to connect to",
     )
+    parser.add_argument(
+        "--sync-metadata",
+        action="store_true",
+        help="Trigger metadata synchronization instead of pinging",
+    )
     return parser.parse_args()
 
 
@@ -40,6 +45,20 @@ def ping_server(url: str) -> None:
         print(f"Failed to connect to {url}: {exc}")
 
 
+def sync_metadata(url: str) -> None:
+    """Send a request to synchronize metadata via the server."""
+    endpoint = f"{url.rstrip('/')}/metadata/sync"
+    req = urllib.request.Request(endpoint, method="POST")
+    try:
+        with urllib.request.urlopen(req) as response:
+            print(f"Metadata sync: {response.status}")
+    except Exception as exc:  # Broad except for placeholder simplicity
+        print(f"Failed to sync metadata: {exc}")
+
+
 if __name__ == "__main__":
     args = parse_args()
-    ping_server(args.server_url)
+    if args.sync_metadata:
+        sync_metadata(args.server_url)
+    else:
+        ping_server(args.server_url)

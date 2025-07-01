@@ -15,6 +15,9 @@ These notes explain why we follow the guidelines in `AGENTS.md`.
   workflow slowdowns while still ensuring correctness.
 - **Sonarr/Radarr** are used for movie and series management because they
   are mature tools that integrate well with our workflow.
+- **Metadata Synchronization** allows Shamash to reuse these managers' rich
+  libraries. Keeping metadata in sync ensures the streaming catalog reflects the
+  latest downloads without reinventing scraping logic.
 - **IPTV Focus** allows Shamash to fill a gap in open source streaming
   solutions while still supporting personal libraries.
 - **Security** is prioritized by running services with minimal privileges and
