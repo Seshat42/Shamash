@@ -30,6 +30,12 @@ python server/main.py --host 0.0.0.0 --port 8000
 
 The server starts an HTTP API on the specified host and port.
 
+### Authentication
+
+Create a user in the database using `server/db.py.add_user()` or through a
+future management endpoint. Obtain a token via `/auth/login` and pass it as a
+`Bearer` token when accessing protected routes such as `/stream/ping`.
+
 ## Running the Client
 
 Run the client and specify the server URL if different from the default:
