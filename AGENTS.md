@@ -25,7 +25,10 @@ Follow these guidelines when contributing:
   endpoints via routers in `server/app.py` to keep the application modular.
 - **Authentication**: JWT utilities live in `server/auth.py`. Use
   `token_required` as a dependency on protected endpoints. Credentials are
-  stored hashed in the SQLite database managed by `server/db.py`.
+ stored hashed in the SQLite database managed by `server/db.py`.
+- **Database**: A SQLite file `server/shamash.db` stores all data. Import
+  `server.db` to create tables automatically using SQLAlchemy models defined in
+  `server/models.py`.
 
 General workflow:
 1. Create a feature branch.
