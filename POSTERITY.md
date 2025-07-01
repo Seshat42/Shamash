@@ -47,6 +47,9 @@ additional security layers such as rate limiting.
   introduced. Streaming support relies on external players like `ffplay` which
   allows us to avoid embedding complex media libraries while still enabling
   playback over authenticated HTTP endpoints.
+- **Documentation Overview** in `docs/README.md` guides newcomers by describing
+  each module and capturing troubleshooting steps. Maintaining this file helps
+  reduce onboarding questions.
 
 These choices support long-term maintainability, scalability, and a secure
 media server environment. Keep this document updated when new decisions are

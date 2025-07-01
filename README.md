@@ -30,7 +30,7 @@ python server/main.py --host 0.0.0.0 --port 8000
 
 The server starts an HTTP API on the specified host and port.
 
-### Authentication
+## Authentication
 
 Create a user in the database using `server/db.py.add_user()` or through a
 future management endpoint. Obtain a token via `/auth/login` and pass it as a
@@ -50,6 +50,17 @@ python client/main.py list --token YOUR_TOKEN
 # Play an item with ffplay
 python client/main.py play 1 --token YOUR_TOKEN --player ffplay
 ```
+
+## Configuration
+
+Shamash loads settings from `config/default.yaml`. Edit this file to change
+the listening port, database path or playlist URLs. The CLI reads the default
+server URL from `config/client.yaml`. Environment variables override certain
+settings:
+
+* `SHAMASH_DB_PATH` – path to the SQLite database.
+* `SONARR_API_KEY` and `RADARR_API_KEY` – credentials for Sonarr and Radarr.
+* `SONARR_URL` and `RADARR_URL` – set custom service URLs.
 
 ## Configuration Files
 
@@ -71,6 +82,17 @@ Configure Sonarr and Radarr to download media into directories that Shamash can 
 ## IPTV Configuration
 
 Provide your IPTV playlist URLs in `config/default.yaml`. The server will stream channels from these playlists alongside your local media library.
+
+## Running in Production
+
+Run Shamash behind a reverse proxy such as Nginx for HTTPS termination.
+Start the API using uvicorn directly or under a process manager:
+
+```bash
+uvicorn server.app:app --host 0.0.0.0 --port 8000
+```
+
+Use `systemd` or a similar tool to manage the service and enable restarts.
 
 See the [`docs/`](docs/README.md) directory for additional design notes,
 including a high-level [architecture overview](docs/architecture.md).
