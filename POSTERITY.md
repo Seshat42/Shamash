@@ -26,7 +26,9 @@ additional security layers such as rate limiting.
 - **JWT Authentication** was introduced to secure the API while keeping the
   implementation lightweight. Tokens allow stateless auth so we can scale the
   service horizontally without session affinity. Storing credentials hashed in
-  SQLite keeps dependencies minimal during early development.
+ SQLite keeps dependencies minimal during early development. We now use
+ SQLAlchemy to manage database access so models can evolve without manual SQL
+ and to simplify future migrations.
 
 These choices support long-term maintainability, scalability, and a secure
 media server environment. Keep this document updated when new decisions are

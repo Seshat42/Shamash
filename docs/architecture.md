@@ -14,10 +14,10 @@ Shamash is organized into four primary modules:
 A simplified diagram of these interactions is shown below:
 
 ```text
-+---------+       +---------------+       +-----------+
-| Client  | <---> | Shamash API   | <---- | Database  |
-+---------+       +---------------+       +-----------+
-      ^                 ^    ^                ^
++---------+       +---------------+       +---------------------+
+| Client  | <---> | Shamash API   | <-->  | SQLite (SQLAlchemy) |
++---------+       +---------------+       +---------------------+
+      ^                 ^    ^                     ^
       |                 |    |                |
       |                 |    +--> Caching ----+
       |                 +----------+         |
@@ -32,5 +32,6 @@ A simplified diagram of these interactions is shown below:
 
 The server exposes a REST interface consumed by the client. External services
 like Sonarr and Radarr interact with the metadata module, while the database and
-cache provide state and speed. Each component can run independently, allowing
-Shamash to scale horizontally.
+cache provide state and speed. SQLAlchemy manages the SQLite database so the API
+can evolve without manual SQL changes. Each component can run independently,
+allowing Shamash to scale horizontally.
