@@ -10,6 +10,9 @@ These notes explain why we follow the guidelines in `AGENTS.md`.
   interact and guides scalability planning.
 - **Testing** before committing avoids pushing broken code and maintains
   reliability.
+- **Local Test Execution** keeps the CI pipeline minimal and fast. Developers
+  run tests locally with `pytest` before pushing changes, which prevents
+  workflow slowdowns while still ensuring correctness.
 - **Sonarr/Radarr** are used for movie and series management because they
   are mature tools that integrate well with our workflow.
 - **IPTV Focus** allows Shamash to fill a gap in open source streaming

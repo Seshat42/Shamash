@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import os
 from pathlib import Path
 from typing import Optional
 
@@ -11,7 +12,8 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from .models import Base, User, MediaItem
 
-DB_PATH = Path(__file__).with_name("shamash.db")
+DEFAULT_DB_PATH = Path(__file__).with_name("shamash.db")
+DB_PATH = Path(os.environ.get("SHAMASH_DB_PATH", DEFAULT_DB_PATH))
 DATABASE_URL = f"sqlite:///{DB_PATH}"
 
 engine = create_engine(

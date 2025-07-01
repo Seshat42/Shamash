@@ -2,3 +2,5 @@ fastapi
 uvicorn
 PyJWT
 SQLAlchemy
+pytest
+httpx

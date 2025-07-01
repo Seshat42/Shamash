@@ -56,3 +56,15 @@ Provide your IPTV playlist URL and any required credentials through the Shamash 
 
 See the [`docs/`](docs/README.md) directory for additional design notes,
 including a high-level [architecture overview](docs/architecture.md).
+
+## Testing
+
+Run the test suite locally before committing changes. Tests live in the
+`tests/` directory and are executed with:
+
+```bash
+pytest
+```
+
+These tests are not run by any GitHub workflow, so local verification is
+important.

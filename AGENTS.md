@@ -18,9 +18,11 @@ Follow these guidelines when contributing:
   `CHANGELOG.md` up to date with your changes.
 - **Commits**: Commit logical units of work with descriptive messages. Update
   the changelog with a brief summary of each change.
-- **Testing**: Run available tests before committing. If no tests exist,
-  run `python -m py_compile */*.py` and execute the scripts to ensure they
-  start without errors.
+- **Testing**: Run `pytest` on the `tests/` directory before committing.
+  Tests are executed locally only and are intentionally omitted from any GitHub
+  workflow. Always create new tests when adding features. If no tests exist,
+  run `python -m py_compile */*.py` and execute the scripts to ensure they start
+  without errors.
 - **Server Framework**: The API uses FastAPI served by uvicorn. Add new
   endpoints via routers in `server/app.py` to keep the application modular.
 - **Authentication**: JWT utilities live in `server/auth.py`. Use
@@ -28,7 +30,8 @@ Follow these guidelines when contributing:
  stored hashed in the SQLite database managed by `server/db.py`.
 - **Database**: A SQLite file `server/shamash.db` stores all data. Import
   `server.db` to create tables automatically using SQLAlchemy models defined in
-  `server/models.py`.
+  `server/models.py`. Set the `SHAMASH_DB_PATH` environment variable to point to
+  an alternate database when running tests.
 
 General workflow:
 1. Create a feature branch.
