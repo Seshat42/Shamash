@@ -6,6 +6,8 @@ These notes explain why we follow the guidelines in `AGENTS.md`.
   and clear naming reduces onboarding time for new contributors.
 - **Documentation** across README and change logs helps track project
   history and design decisions.
+- **Architecture Overview** in `docs/architecture.md` illustrates how modules
+  interact and guides scalability planning.
 - **Testing** before committing avoids pushing broken code and maintains
   reliability.
 - **Sonarr/Radarr** are used for movie and series management because they
