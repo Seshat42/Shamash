@@ -15,6 +15,9 @@ All notable changes to this project will be documented in this file.
 - Updated architecture diagram to illustrate SQLAlchemy-backed SQLite.
 - Established `pytest`-based test suite executed locally only and added
   `SHAMASH_DB_PATH` override for isolated databases.
+- Introduced YAML configuration files under `config/` and loader module.
+- Client now reads default server URL from `config/client.yaml`.
+- Documented configuration format and rationale in README and POSTERITY.
 
 ## [0.1.0] - 2025-07-01
 - Initial project structure with server, client, and documentation directories.

@@ -7,12 +7,14 @@ import os
 from pathlib import Path
 from typing import Optional
 
+from .config import CONFIG
+
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session, sessionmaker
 
 from .models import Base, User, MediaItem
 
-DEFAULT_DB_PATH = Path(__file__).with_name("shamash.db")
+DEFAULT_DB_PATH = Path(CONFIG.get("server", {}).get("database", Path(__file__).with_name("shamash.db")))
 DB_PATH = Path(os.environ.get("SHAMASH_DB_PATH", DEFAULT_DB_PATH))
 DATABASE_URL = f"sqlite:///{DB_PATH}"
 

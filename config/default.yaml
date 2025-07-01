@@ -1,0 +1,5 @@
+server:
+  port: 8000
+  database: server/shamash.db
+  playlists:
+    - "http://example.com/playlist.m3u"

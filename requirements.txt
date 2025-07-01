@@ -4,3 +4,4 @@ PyJWT
 SQLAlchemy
 pytest
 httpx
+PyYAML
