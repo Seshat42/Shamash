@@ -13,6 +13,8 @@ All notable changes to this project will be documented in this file.
 - Documented token usage and updated contributor guidelines and posterity notes.
 - Introduced SQLAlchemy models with basic CRUD utilities and database setup.
 - Updated architecture diagram to illustrate SQLAlchemy-backed SQLite.
+- Established `pytest`-based test suite executed locally only and added
+  `SHAMASH_DB_PATH` override for isolated databases.
 
 ## [0.1.0] - 2025-07-01
 - Initial project structure with server, client, and documentation directories.
