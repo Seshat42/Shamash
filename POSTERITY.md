@@ -30,8 +30,14 @@ additional security layers such as rate limiting.
   implementation lightweight. Tokens allow stateless auth so we can scale the
   service horizontally without session affinity. Storing credentials hashed in
  SQLite keeps dependencies minimal during early development. We now use
- SQLAlchemy to manage database access so models can evolve without manual SQL
- and to simplify future migrations.
+  SQLAlchemy to manage database access so models can evolve without manual SQL
+  and to simplify future migrations.
+
+- **YAML Configuration** keeps settings human-readable and easy to override.
+  Loading `config/default.yaml` at startup standardizes server options such as
+  port, database location and IPTV playlists. A separate `client.yaml` allows
+  the CLI to connect without command line arguments. This structure avoids
+  hardcoding paths in code while remaining simple to maintain.
 
 These choices support long-term maintainability, scalability, and a secure
 media server environment. Keep this document updated when new decisions are

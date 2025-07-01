@@ -23,6 +23,9 @@ Follow these guidelines when contributing:
   workflow. Always create new tests when adding features. If no tests exist,
   run `python -m py_compile */*.py` and execute the scripts to ensure they start
   without errors.
+- **Configuration**: YAML files in `config/` provide default settings for the
+  server and client. Update `config/default.yaml` and `config/client.yaml` when
+  introducing new options.
 - **Server Framework**: The API uses FastAPI served by uvicorn. Add new
   endpoints via routers in `server/app.py` to keep the application modular.
 - **Authentication**: JWT utilities live in `server/auth.py`. Use

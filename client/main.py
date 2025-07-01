@@ -2,15 +2,30 @@
 
 import argparse
 import urllib.request
+from pathlib import Path
+
+import yaml
 
 
-def parse_args():
+CONFIG_FILE = Path(__file__).resolve().parent.parent / "config" / "client.yaml"
+
+
+def get_default_url() -> str:
+    """Return the server URL from configuration or a built-in default."""
+    if CONFIG_FILE.exists():
+        with CONFIG_FILE.open("r", encoding="utf-8") as cfg:
+            data = yaml.safe_load(cfg) or {}
+        return data.get("server_url", "http://localhost:8000")
+    return "http://localhost:8000"
+
+
+def parse_args() -> argparse.Namespace:
     """Parse command line arguments for client configuration."""
     parser = argparse.ArgumentParser(description="Run the Shamash client.")
     parser.add_argument(
         "server_url",
         nargs="?",
-        default="http://localhost:8000",
+        default=get_default_url(),
         help="URL of the Shamash server to connect to",
     )
     return parser.parse_args()

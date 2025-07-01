@@ -46,13 +46,26 @@ python client/main.py http://localhost:8000
 
 The client simply pings the server and prints the HTTP status. It will be expanded in future releases.
 
+## Configuration Files
+
+The `config/` directory contains YAML files used by both the server and the
+client:
+
+* `config/default.yaml` &ndash; server settings including the listening port,
+  path to the SQLite database and IPTV playlist URLs.
+* `config/client.yaml` &ndash; optional file that specifies the default server
+  URL for `client/main.py`.
+
+Copy these files and adjust the values to suit your environment. The server and
+client will load them automatically on startup.
+
 ## Sonarr and Radarr Usage
 
 Configure Sonarr and Radarr to download media into directories that Shamash can access. These tools handle the acquisition and organization of movies and series, while Shamash focuses on streaming them to your devices.
 
 ## IPTV Configuration
 
-Provide your IPTV playlist URL and any required credentials through the Shamash configuration file (to be implemented). The server will stream channels from this playlist alongside your local media library.
+Provide your IPTV playlist URLs in `config/default.yaml`. The server will stream channels from these playlists alongside your local media library.
 
 See the [`docs/`](docs/README.md) directory for additional design notes,
 including a high-level [architecture overview](docs/architecture.md).
