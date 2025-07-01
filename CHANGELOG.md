@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- Implemented Sonarr and Radarr integration modules with a new `/metadata/sync`
+  endpoint and client CLI option `--sync-metadata`.
+- Documented external API key setup and updated architecture overview.
 - Added architecture overview in `docs/architecture.md` and updated
   documentation references.
 - Migrated server to FastAPI with uvicorn and added module routers.

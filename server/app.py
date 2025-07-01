@@ -2,6 +2,9 @@
 
 from fastapi import FastAPI, APIRouter, Depends
 
+from .integrations.radarr import refresh_movies
+from .integrations.sonarr import refresh_series
+
 from .auth import auth_router, token_required
 
 
@@ -22,6 +25,17 @@ async def ingestion_ping() -> dict[str, str]:
 async def metadata_ping() -> dict[str, str]:
     """Check the metadata sync module."""
     return {"status": "metadata placeholder"}
+
+
+@metadata_sync_router.post("/sync")
+async def metadata_sync() -> dict[str, str]:
+    """Synchronize metadata with Sonarr and Radarr."""
+    try:
+        refresh_series()
+        refresh_movies()
+    except Exception as exc:  # Broad except keeps placeholder simple
+        return {"status": f"failed: {exc}"}
+    return {"status": "synchronized"}
 
 
 @user_management_router.get("/ping")

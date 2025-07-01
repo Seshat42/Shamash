@@ -27,11 +27,15 @@ A simplified diagram of these interactions is shown below:
           +--------------------+       | Ingestion   |
                  ^                     +-------------+
                  |
-                 +--> Metadata Sync (Sonarr/Radarr)
+                 +--> Metadata Sync
+                              |
+                              +--> Sonarr
+                              +--> Radarr
 ```
 
 The server exposes a REST interface consumed by the client. External services
-like Sonarr and Radarr interact with the metadata module, while the database and
-cache provide state and speed. SQLAlchemy manages the SQLite database so the API
-can evolve without manual SQL changes. Each component can run independently,
-allowing Shamash to scale horizontally.
+Sonarr and Radarr communicate with the metadata module using HTTP requests and
+API keys supplied via environment variables. The database and cache provide
+state and speed. SQLAlchemy manages the SQLite database so the API can evolve
+without manual SQL changes. Each component can run independently, allowing
+Shamash to scale horizontally.
