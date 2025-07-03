@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- Pinned `httpx` to `<0.24` for compatibility with Starlette 0.27.
+- Added `login` client subcommand with optional token storage.
 - Added `jwt_secret` option in `config/default.yaml` and `JWT_SECRET` environment
   variable for token signing.
 - Replaced SHA-256 password hashing with bcrypt and updated tests.

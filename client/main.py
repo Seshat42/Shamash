@@ -39,6 +39,14 @@ def parse_args() -> argparse.Namespace:
     subparsers.add_parser("ping", help="Check server availability")
     subparsers.add_parser("sync", help="Synchronize metadata")
     subparsers.add_parser("list", help="List available media items")
+    login_parser = subparsers.add_parser("login", help="Obtain and optionally save a JWT token")
+    login_parser.add_argument("username", help="Account username")
+    login_parser.add_argument("password", help="Account password")
+    login_parser.add_argument(
+        "--save-token",
+        action="store_true",
+        help="Persist token to $HOME/.shamash_token",
+    )
     play_parser = subparsers.add_parser("play", help="Stream a media item")
     play_parser.add_argument("item_id", type=int, help="ID of media item")
     play_parser.add_argument(
@@ -87,6 +95,30 @@ def list_media(url: str, token: str | None) -> None:
         print(f"Failed to list media: {exc}")
 
 
+def login_user(url: str, username: str, password: str, save_token: bool) -> None:
+    """Request a JWT token and optionally persist it."""
+    endpoint = f"{url.rstrip('/')}/auth/login"
+    payload = json.dumps({"username": username, "password": password}).encode()
+    req = urllib.request.Request(
+        endpoint,
+        data=payload,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req) as response:
+            data = json.load(response)
+        token = data.get("access_token")
+        if not token:
+            raise ValueError("No token returned")
+        print(token)
+        if save_token:
+            token_path = Path.home() / ".shamash_token"
+            token_path.write_text(token, encoding="utf-8")
+    except Exception as exc:  # Broad except for placeholder simplicity
+        print(f"Failed to login: {exc}")
+
+
 def play_media(url: str, item_id: int, token: str | None, player: str) -> None:
     """Stream a media item using an external player."""
     endpoint = f"{url.rstrip('/')}/stream/{item_id}"
@@ -115,3 +147,10 @@ if __name__ == "__main__":
         list_media(args.server_url, args.token)
     elif args.command == "play":
         play_media(args.server_url, args.item_id, args.token, args.player)
+    elif args.command == "login":
+        login_user(
+            args.server_url,
+            args.username,
+            args.password,
+            args.save_token,
+        )

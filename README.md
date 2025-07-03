@@ -44,12 +44,18 @@ Use the client subcommands to interact with the server:
 # Ping the API
 python client/main.py ping --server-url http://localhost:8000
 
+# Obtain a token and save it for later
+python client/main.py login bob secret --save-token
+
 # List available media (requires a token)
 python client/main.py list --token YOUR_TOKEN
 
 # Play an item with ffplay
 python client/main.py play 1 --token YOUR_TOKEN --player ffplay
 ```
+
+The `--save-token` flag writes the returned token to `$HOME/.shamash_token` so
+subsequent commands can pass it via `--token` without retyping.
 
 ## Configuration
 
