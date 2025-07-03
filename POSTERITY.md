@@ -6,6 +6,8 @@ These notes explain why we follow the guidelines in `AGENTS.md`.
   and clear naming reduces onboarding time for new contributors.
 - **Documentation** across README and change logs helps track project
   history and design decisions.
+- **Dependency Pinning** avoids unexpected breakage. `httpx` is pinned below
+  version 0.24 to remain compatible with Starlette 0.27.
 - **Architecture Overview** in `docs/architecture.md` illustrates how modules
   interact and guides scalability planning.
 - **Separation of Concerns** is enforced by dividing the codebase into
@@ -63,6 +65,9 @@ additional security layers such as rate limiting.
     introduced. Streaming support relies on external players like `ffplay` which
     allows us to avoid embedding complex media libraries while still enabling
     playback over authenticated HTTP endpoints.
+  - **Login Subcommand** now retrieves tokens from `/auth/login` and can save
+    them to `$HOME/.shamash_token` for convenience. This encourages secure
+    usage without repeatedly passing credentials on the command line.
   - **Containerization** ensures a consistent runtime and simplifies
     deployments. Building the server image from the official Python base allows
     contributors to run the API with identical dependencies. `docker-compose`

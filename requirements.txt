@@ -3,6 +3,6 @@ uvicorn
 PyJWT
 SQLAlchemy
 pytest
-httpx
+httpx<0.24
 PyYAML
 bcrypt
