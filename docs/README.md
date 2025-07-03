@@ -18,6 +18,12 @@ Use `/auth/login` to obtain a JWT token. Include the token in the
 `Authorization: Bearer` header when calling protected endpoints such as
 `/stream/ping`.
 
+### Environment Variables
+
+Set the `JWT_SECRET` variable or edit `config/default.yaml` to configure the
+secret used for signing JWT tokens. `SONARR_API_KEY` and `RADARR_API_KEY` must
+also be provided when using metadata synchronization.
+
 ## Troubleshooting
 
 * **Server fails to start** &ndash; Ensure dependencies are installed with

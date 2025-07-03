@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- Added `jwt_secret` option in `config/default.yaml` and `JWT_SECRET` environment
+  variable for token signing.
+- Replaced SHA-256 password hashing with bcrypt and updated tests.
+- Documented secret handling and updated AGENTS, POSTERITY and SECURITY notes.
 - Added Dockerfile and `docker-compose.yaml` for containerized deployment and
   documented usage.
 - Implemented Sonarr and Radarr integration modules with a new `/metadata/sync`

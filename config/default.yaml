@@ -1,5 +1,6 @@
 server:
   port: 8000
   database: server/shamash.db
+  jwt_secret: change_this_secret
   playlists:
     - "http://example.com/playlist.m3u"

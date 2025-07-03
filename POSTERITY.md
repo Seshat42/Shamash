@@ -45,6 +45,13 @@ additional security layers such as rate limiting.
   SQLAlchemy to manage database access so models can evolve without manual SQL
   and to simplify future migrations.
 
+- **Secrets via environment variables** avoid hard-coding sensitive values.
+  Loading the JWT secret from `JWT_SECRET` or `config/default.yaml` allows each
+  deployment to provide its own key while keeping development simple.
+
+- **bcrypt password hashing** replaced SHA-256 to mitigate rainbow table
+  attacks. Bcrypt provides built-in salting and configurable work factors.
+
 - **YAML Configuration** keeps settings human-readable and easy to override.
   Loading `config/default.yaml` at startup standardizes server options such as
   port, database location and IPTV playlists. A separate `client.yaml` allows

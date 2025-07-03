@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import hashlib
+import bcrypt
 import os
 from pathlib import Path
 from typing import Optional
@@ -37,7 +37,7 @@ def get_session() -> Session:
 def add_user(username: str, password: str) -> User:
     """Create a new user with a hashed password."""
     session = get_session()
-    password_hash = hashlib.sha256(password.encode()).hexdigest()
+    password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
     user = User(username=username, password_hash=password_hash)
     session.add(user)
     session.commit()
@@ -62,7 +62,9 @@ def update_user_password(username: str, password: str) -> bool:
     if user is None:
         session.close()
         return False
-    user.password_hash = hashlib.sha256(password.encode()).hexdigest()
+    user.password_hash = (
+        bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+    )
     session.commit()
     session.close()
     return True

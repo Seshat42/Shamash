@@ -59,6 +59,7 @@ server URL from `config/client.yaml`. Environment variables override certain
 settings:
 
 * `SHAMASH_DB_PATH` – path to the SQLite database.
+* `JWT_SECRET` – overrides the secret used to sign JWT tokens.
 * `SONARR_API_KEY` and `RADARR_API_KEY` – credentials for Sonarr and Radarr.
 * `SONARR_URL` and `RADARR_URL` – set custom service URLs.
 
@@ -68,7 +69,7 @@ The `config/` directory contains YAML files used by both the server and the
 client:
 
 * `config/default.yaml` &ndash; server settings including the listening port,
-  path to the SQLite database and IPTV playlist URLs.
+  path to the SQLite database, a `jwt_secret` placeholder and IPTV playlist URLs.
 * `config/client.yaml` &ndash; optional file that specifies the default server
   URL for `client/main.py`.
 
