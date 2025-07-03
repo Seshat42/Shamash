@@ -35,6 +35,9 @@ Follow these guidelines when contributing:
   `--save-token`.
 - **Server Framework**: The API uses FastAPI served by uvicorn. Add new
   endpoints via routers in `server/app.py` to keep the application modular.
+- **Modules**: `/ingestion` now accepts POST requests to create media items and
+  `/users` provides CRUD operations. Update documentation when these routes
+  change.
 - **Authentication**: JWT utilities live in `server/auth.py`. Use
   `token_required` as a dependency on protected endpoints. Credentials are
  stored hashed in the SQLite database managed by `server/db.py`.
