@@ -24,6 +24,9 @@ These notes explain why we follow the guidelines in `AGENTS.md`.
 - **Metadata Synchronization** allows Shamash to reuse these managers' rich
   libraries. Keeping metadata in sync ensures the streaming catalog reflects the
   latest downloads without reinventing scraping logic.
+- **Error Logging** was added around Sonarr and Radarr requests so failures are
+  clearly reported to users via `/metadata/sync` and server logs. This
+  simplifies troubleshooting when the external services are unavailable.
 - **IPTV Focus** allows Shamash to fill a gap in open source streaming
   solutions while still supporting personal libraries.
 - **Security** is prioritized by running services with minimal privileges and

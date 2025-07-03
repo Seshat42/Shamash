@@ -18,6 +18,10 @@ All notable changes to this project will be documented in this file.
 - Enhanced `client/main.py` with `argparse` subcommands (`ping`, `sync`, `list`,
   `play`) and streaming via external players.
 - Documented new CLI usage and recorded the rationale in POSTERITY.
+- Implemented POST `/ingestion/` and `/users` CRUD endpoints and added tests.
+- Added error handling for Sonarr and Radarr failures with detailed
+  `/metadata/sync` responses.
+- Documented failure modes and updated architecture overview.
 - Documented external API key setup and updated architecture overview.
 - Added architecture overview in `docs/architecture.md` and updated
   documentation references.

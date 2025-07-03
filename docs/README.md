@@ -32,5 +32,8 @@ also be provided when using metadata synchronization.
 * **Sonarr/Radarr unreachable** &ndash; Verify `SONARR_API_KEY` and
   `RADARR_API_KEY` environment variables are set and the services are
   accessible at their configured URLs.
+* **Metadata sync failed** &ndash; `/metadata/sync` returns `sonarr_error` or
+  `radarr_error` when requests to these services fail. Check the server logs for
+  details and retry once the external services are reachable.
 * **`ffplay` not found** &ndash; Install FFmpeg or use `--player` to specify an
   alternate media player when running the client.
