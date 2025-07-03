@@ -45,6 +45,8 @@ Follow these guidelines when contributing:
     Set the `SONARR_API_KEY` and `RADARR_API_KEY` environment variables so the
     server can authenticate to these services. Optionally adjust `SONARR_URL` and
     `RADARR_URL` if the services run on non-default ports.
+  - **JWT Secret**: Define `JWT_SECRET` or edit `config/default.yaml` to specify
+    the token signing key for local development.
   - **Containerization**: Build the server image with `docker build -t shamash .`
     and launch it with `docker-compose up`. Compose also starts optional Sonarr
     and Radarr containers for metadata syncing.

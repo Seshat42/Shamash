@@ -5,3 +5,4 @@ SQLAlchemy
 pytest
 httpx
 PyYAML
+bcrypt

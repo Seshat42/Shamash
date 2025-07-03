@@ -3,17 +3,21 @@
 from __future__ import annotations
 
 import datetime
-import hashlib
+import os
 
+import bcrypt
 import jwt
 from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from pydantic import BaseModel
 
 from . import db
+from .config import CONFIG
 
 
-SECRET_KEY = "change_this_secret"
+SECRET_KEY = os.environ.get(
+    "JWT_SECRET", CONFIG.get("server", {}).get("jwt_secret", "change_this_secret")
+)
 ALGORITHM = "HS256"
 TOKEN_EXPIRE_SECONDS = 3600
 
@@ -64,7 +68,7 @@ async def login(credentials: LoginRequest) -> dict[str, str]:
     stored_hash = db.get_password_hash(username)
     if stored_hash is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
-    if stored_hash != hashlib.sha256(password.encode()).hexdigest():
+    if not bcrypt.checkpw(password.encode(), stored_hash.encode()):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
     token = create_token(username)
     return {"access_token": token}
