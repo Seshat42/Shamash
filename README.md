@@ -7,18 +7,6 @@ Shamash is an experimental media server and client. It focuses on IPTV streaming
 - Python 3.10 or later
 - Optional: Sonarr and Radarr for automated movie and series downloads
 
-## Installation
-
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/yourorg/shamash.git
-   cd shamash
-   ```
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
 ## Running the Server
 
 Run the server from the repository root. `server/main.py` launches `uvicorn` to
