@@ -2,6 +2,8 @@
 
 Shamash is an experimental media server and client. It focuses on IPTV streaming while integrating well with existing library managers such as Sonarr and Radarr. The project currently provides a minimal server and command line client written in Python.
 
+THIS IS NOT COMPLETE IN ITS CURRENT STATE
+
 ## Prerequisites
 
 - Python 3.10 or later
