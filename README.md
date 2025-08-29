@@ -26,6 +26,15 @@ Create a user in the database using `server/db.py.add_user()` or through a
 future management endpoint. Obtain a token via `/auth/login` and pass it as a
 `Bearer` token when accessing protected routes such as `/stream/ping`.
 
+## Health Endpoints
+
+Shamash exposes several lightweight health checks:
+
+* `GET /ingestion/ping` &ndash; database connectivity for media ingestion.
+* `GET /metadata/ping` &ndash; reachability of Sonarr and Radarr plus database status.
+* `GET /users/ping` &ndash; database connectivity for user management.
+* `GET /stream/ping` &ndash; database connectivity for streaming (requires a token).
+
 ## Running the Client
 
 Use the client subcommands to interact with the server:

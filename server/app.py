@@ -5,9 +5,10 @@ from fastapi.responses import FileResponse, RedirectResponse
 from pathlib import Path
 from pydantic import BaseModel
 import httpx
+from sqlalchemy import text
 
-from .integrations.radarr import refresh_movies
-from .integrations.sonarr import refresh_series
+from .integrations.radarr import refresh_movies, RADARR_URL
+from .integrations.sonarr import refresh_series, SONARR_URL
 from . import db
 
 from .auth import auth_router, token_required
@@ -21,10 +22,31 @@ streaming_router = APIRouter(prefix="/stream", tags=["stream"])
 media_router = APIRouter(prefix="/media", tags=["media"])
 
 
+async def _check_service(url: str) -> str:
+    """Return ``"ok"`` if an HTTP HEAD succeeds, otherwise ``"unreachable"``."""
+    try:
+        async with httpx.AsyncClient(timeout=2) as client:
+            await client.head(url)
+        return "ok"
+    except httpx.RequestError:
+        return "unreachable"
+
+
+def _check_database() -> str:
+    """Return ``"ok"`` if the database responds to a simple query."""
+    try:
+        session = db.get_session()
+        session.execute(text("SELECT 1"))
+        session.close()
+        return "ok"
+    except Exception:
+        return "db_unreachable"
+
+
 @media_ingestion_router.get("/ping")
 async def ingestion_ping() -> dict[str, str]:
-    """Check the media ingestion module."""
-    return {"status": "ingestion placeholder"}
+    """Check database connectivity for media ingestion."""
+    return {"status": _check_database()}
 
 
 class IngestionRequest(BaseModel):
@@ -48,8 +70,14 @@ async def ingest_media(item: IngestionRequest) -> dict[str, int | str | None]:
 
 @metadata_sync_router.get("/ping")
 async def metadata_ping() -> dict[str, str]:
-    """Check the metadata sync module."""
-    return {"status": "metadata placeholder"}
+    """Check connectivity with Sonarr, Radarr and the database."""
+    sonarr_status = await _check_service(SONARR_URL)
+    radarr_status = await _check_service(RADARR_URL)
+    return {
+        "sonarr": sonarr_status,
+        "radarr": radarr_status,
+        "database": _check_database(),
+    }
 
 
 @metadata_sync_router.post("/sync")
@@ -80,8 +108,8 @@ async def list_media(_: str = Depends(token_required)) -> list[dict]:
 
 @user_management_router.get("/ping")
 async def users_ping() -> dict[str, str]:
-    """Check the user management module."""
-    return {"status": "users placeholder"}
+    """Check database connectivity for user management."""
+    return {"status": _check_database()}
 
 
 class UserCreateRequest(BaseModel):
@@ -133,8 +161,8 @@ async def delete_user(username: str) -> dict[str, str]:
 
 @streaming_router.get("/ping")
 async def stream_ping(_: str = Depends(token_required)) -> dict[str, str]:
-    """Check the streaming module. Requires a valid token."""
-    return {"status": "streaming placeholder"}
+    """Check database connectivity for streaming. Requires a valid token."""
+    return {"status": _check_database()}
 
 
 @streaming_router.get("/{item_id}")
