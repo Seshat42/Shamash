@@ -18,6 +18,15 @@ Use `/auth/login` to obtain a JWT token. Include the token in the
 `Authorization: Bearer` header when calling protected endpoints such as
 `/stream/ping`.
 
+## Health Checks
+
+The API exposes lightweight health endpoints:
+
+* `GET /ingestion/ping` &ndash; verifies database connectivity for media ingestion.
+* `GET /metadata/ping` &ndash; checks reachability of Sonarr and Radarr and the database.
+* `GET /users/ping` &ndash; verifies database connectivity for user management.
+* `GET /stream/ping` &ndash; verifies database connectivity for streaming (requires a token).
+
 ### Environment Variables
 
 Set the `JWT_SECRET` variable or edit `config/default.yaml` to configure the
