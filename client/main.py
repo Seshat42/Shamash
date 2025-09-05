@@ -2,15 +2,22 @@
 
 import argparse
 import json
+import logging
 import shutil
 import subprocess
 import urllib.request
 from pathlib import Path
 
+from urllib.error import HTTPError, URLError
+
 import yaml
 
 
 CONFIG_FILE = Path(__file__).resolve().parent.parent / "config" / "client.yaml"
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def get_default_url() -> str:
@@ -64,8 +71,12 @@ def ping_server(url: str) -> None:
     try:
         with urllib.request.urlopen(url) as response:
             print(f"Connected to {url}: {response.status}")
-    except Exception as exc:  # Broad except for placeholder simplicity
-        print(f"Failed to connect to {url}: {exc}")
+    except HTTPError as exc:
+        logger.error("Ping HTTP error", exc_info=exc)
+        print(f"Failed to connect to {url}: HTTP {exc.code}")
+    except URLError as exc:
+        logger.error("Ping failed", exc_info=exc)
+        print(f"Failed to connect to {url}: {exc.reason}")
 
 
 def sync_metadata(url: str) -> None:
@@ -75,8 +86,12 @@ def sync_metadata(url: str) -> None:
     try:
         with urllib.request.urlopen(req) as response:
             print(f"Metadata sync: {response.status}")
-    except Exception as exc:  # Broad except for placeholder simplicity
-        print(f"Failed to sync metadata: {exc}")
+    except HTTPError as exc:
+        logger.error("Metadata sync HTTP error", exc_info=exc)
+        print(f"Failed to sync metadata: HTTP {exc.code}")
+    except URLError as exc:
+        logger.error("Metadata sync failed", exc_info=exc)
+        print(f"Failed to sync metadata: {exc.reason}")
 
 
 def list_media(url: str, token: str | None) -> None:
@@ -91,8 +106,15 @@ def list_media(url: str, token: str | None) -> None:
             items = json.load(response)
         for item in items:
             print(f"{item['id']}: {item['title']}")
-    except Exception as exc:  # Broad except for placeholder simplicity
-        print(f"Failed to list media: {exc}")
+    except HTTPError as exc:
+        logger.error("List media HTTP error", exc_info=exc)
+        print(f"Failed to list media: HTTP {exc.code}")
+    except URLError as exc:
+        logger.error("List media failed", exc_info=exc)
+        print(f"Failed to list media: {exc.reason}")
+    except json.JSONDecodeError as exc:
+        logger.error("List media JSON error", exc_info=exc)
+        print("Failed to list media: invalid JSON response")
 
 
 def login_user(url: str, username: str, password: str, save_token: bool) -> None:
@@ -114,8 +136,22 @@ def login_user(url: str, username: str, password: str, save_token: bool) -> None
         print(token)
         if save_token:
             token_path = Path.home() / ".shamash_token"
-            token_path.write_text(token, encoding="utf-8")
-    except Exception as exc:  # Broad except for placeholder simplicity
+            try:
+                token_path.write_text(token, encoding="utf-8")
+            except OSError as exc:
+                logger.error("Token save failed", exc_info=exc)
+                print(f"Could not save token to {token_path}: {exc}")
+    except HTTPError as exc:
+        logger.error("Login HTTP error", exc_info=exc)
+        print(f"Failed to login: HTTP {exc.code}")
+    except URLError as exc:
+        logger.error("Login request failed", exc_info=exc)
+        print(f"Failed to login: {exc.reason}")
+    except json.JSONDecodeError as exc:
+        logger.error("Login JSON error", exc_info=exc)
+        print("Failed to login: invalid JSON response")
+    except ValueError as exc:
+        logger.error("Login token error", exc_info=exc)
         print(f"Failed to login: {exc}")
 
 
@@ -132,7 +168,8 @@ def play_media(url: str, item_id: int, token: str | None, player: str) -> None:
     cmd.append(endpoint)
     try:
         subprocess.run(cmd, check=False)
-    except Exception as exc:  # Broad except for placeholder simplicity
+    except OSError as exc:
+        logger.error("Player launch failed", exc_info=exc)
         print(f"Failed to launch player: {exc}")
 
 
