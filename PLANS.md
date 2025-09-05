@@ -1,10 +1,7 @@
 # Plan
 
-1. Replace placeholder ping endpoints in `server/app.py` with health checks:
-   - Add helper functions to verify database connectivity and external service reachability.
-   - Update `/ingestion/ping`, `/metadata/ping`, `/users/ping`, and `/stream/ping` to return real statuses.
-2. Update tests to assert new health responses and ensure no placeholder strings remain.
-3. Revise documentation (`README.md`, `docs/README.md`) describing the health endpoints.
-4. Record changes in `CHANGELOG.md`.
-5. Run `pytest tests/test_app.py::test_app_includes_routes -q` and full test suite for verification.
-6. Commit changes and open a pull request.
+1. Replace generic exception handlers in `client/main.py` with targeted errors and logging.
+2. Document client error messages in `docs/README.md`.
+3. Record the update in `CHANGELOG.md`.
+4. Run `pytest tests/test_client_login.py::test_login_saves_token -q`.
+5. Commit changes and open a pull request.

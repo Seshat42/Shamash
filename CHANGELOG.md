@@ -18,6 +18,8 @@ All notable changes to this project will be documented in this file.
   items.
 - Enhanced `client/main.py` with `argparse` subcommands (`ping`, `sync`, `list`,
   `play`) and streaming via external players.
+- Replaced generic client exception handling with targeted errors and structured
+  logging.
 - Documented new CLI usage and recorded the rationale in POSTERITY.
 - Implemented POST `/ingestion/` and `/users` CRUD endpoints and added tests.
 - Added error handling for Sonarr and Radarr failures with detailed

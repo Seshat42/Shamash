@@ -46,3 +46,7 @@ also be provided when using metadata synchronization.
   details and retry once the external services are reachable.
 * **`ffplay` not found** &ndash; Install FFmpeg or use `--player` to specify an
   alternate media player when running the client.
+* **Client connection or login errors** &ndash; The CLI prints specific messages
+  such as `Failed to connect to http://localhost:8000` or `Failed to login:
+  invalid JSON response`. Review the message to resolve network issues,
+  credentials, or file permissions.

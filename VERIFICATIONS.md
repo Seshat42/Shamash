@@ -1,7 +1,4 @@
 # Verification
 
-## `pytest tests/test_app.py::test_app_includes_routes -q`
-- Passed: see chunk `f802b3`.
-
-## `pytest -q`
-- Passed: see chunk `068cd7`.
+## `pytest tests/test_client_login.py::test_login_saves_token -q`
+- Passed: see chunk `434fcb`.
