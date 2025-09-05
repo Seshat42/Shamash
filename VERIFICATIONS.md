@@ -1,4 +1,4 @@
 # Verification
 
-## `pytest tests/test_client_login.py::test_login_saves_token -q`
-- Passed: see chunk `434fcb`.
+## `pytest tests/test_ingestion_users.py::test_user_crud_endpoints -q`
+- Passed: see chunk `4bdaef`.

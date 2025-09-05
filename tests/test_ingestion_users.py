@@ -17,19 +17,40 @@ def test_ingest_creates_item(temp_db):
 
 
 def test_user_crud_endpoints(temp_db):
+    db.add_user("admin", "pw", role="admin")
     app = create_app()
     client = TestClient(app)
 
-    resp = client.post("/users/", json={"username": "dave", "password": "pw"})
+    admin_token = client.post(
+        "/auth/login", json={"username": "admin", "password": "pw"}
+    ).json()["access_token"]
+    admin_headers = {"Authorization": f"Bearer {admin_token}"}
+
+    resp = client.post(
+        "/users/", json={"username": "dave", "password": "pw"}, headers=admin_headers
+    )
     assert resp.status_code == 200
 
-    resp = client.get("/users/dave")
+    dave_token = client.post(
+        "/auth/login", json={"username": "dave", "password": "pw"}
+    ).json()["access_token"]
+    user_headers = {"Authorization": f"Bearer {dave_token}"}
+
+    resp = client.post(
+        "/users/", json={"username": "eve", "password": "pw"}, headers=user_headers
+    )
+    assert resp.status_code == 403
+
+    resp = client.get("/users/dave", headers=admin_headers)
     assert resp.status_code == 200
     assert resp.json()["username"] == "dave"
+    assert resp.json()["role"] == "user"
 
-    resp = client.put("/users/dave", json={"password": "new"})
+    resp = client.put(
+        "/users/dave", json={"password": "new"}, headers=admin_headers
+    )
     assert resp.status_code == 200
 
-    resp = client.delete("/users/dave")
+    resp = client.delete("/users/dave", headers=admin_headers)
     assert resp.status_code == 200
     assert db.get_user("dave") is None
