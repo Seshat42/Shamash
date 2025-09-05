@@ -16,6 +16,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String, unique=True, nullable=False)
     password_hash = Column(String, nullable=False)
+    role = Column(String, default="user", nullable=False)
 
 
 class MediaItem(Base):

@@ -11,7 +11,7 @@ from .integrations.radarr import refresh_movies, RADARR_URL
 from .integrations.sonarr import refresh_series, SONARR_URL
 from . import db
 
-from .auth import auth_router, token_required
+from .auth import auth_router, token_required, require_role
 
 
 # Placeholder routers for future modules
@@ -117,6 +117,7 @@ class UserCreateRequest(BaseModel):
 
     username: str
     password: str
+    role: str = "user"
 
 
 class PasswordUpdateRequest(BaseModel):
@@ -126,23 +127,31 @@ class PasswordUpdateRequest(BaseModel):
 
 
 @user_management_router.post("/")
-async def create_user(request: UserCreateRequest) -> dict[str, str | int]:
+async def create_user(
+    request: UserCreateRequest, _: str = Depends(require_role("admin"))
+) -> dict[str, str | int]:
     """Create a new user account."""
-    user = db.add_user(request.username, request.password)
-    return {"id": user.id, "username": user.username}
+    user = db.add_user(request.username, request.password, request.role)
+    return {"id": user.id, "username": user.username, "role": user.role}
 
 
 @user_management_router.get("/{username}")
-async def get_user(username: str) -> dict[str, str | int]:
+async def get_user(
+    username: str, _: str = Depends(require_role("admin"))
+) -> dict[str, str | int]:
     """Retrieve information about a user."""
     user = db.get_user(username)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
-    return {"id": user.id, "username": user.username}
+    return {"id": user.id, "username": user.username, "role": user.role}
 
 
 @user_management_router.put("/{username}")
-async def update_user(username: str, request: PasswordUpdateRequest) -> dict[str, str]:
+async def update_user(
+    username: str,
+    request: PasswordUpdateRequest,
+    _: str = Depends(require_role("admin")),
+) -> dict[str, str]:
     """Update a user's password."""
     success = db.update_user_password(username, request.password)
     if not success:
@@ -151,7 +160,9 @@ async def update_user(username: str, request: PasswordUpdateRequest) -> dict[str
 
 
 @user_management_router.delete("/{username}")
-async def delete_user(username: str) -> dict[str, str]:
+async def delete_user(
+    username: str, _: str = Depends(require_role("admin"))
+) -> dict[str, str]:
     """Remove a user account."""
     success = db.delete_user(username)
     if not success:

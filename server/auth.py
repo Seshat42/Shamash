@@ -60,6 +60,21 @@ def token_required(credentials: HTTPAuthorizationCredentials = Depends(security)
     return verify_token(credentials.credentials)
 
 
+def require_role(role: str):
+    """Return a dependency that ensures the authenticated user has ``role``."""
+
+    def checker(username: str = Depends(token_required)) -> str:
+        user = db.get_user(username)
+        if user is None or user.role != role:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Insufficient permissions",
+            )
+        return username
+
+    return checker
+
+
 @auth_router.post("/login")
 async def login(credentials: LoginRequest) -> dict[str, str]:
     """Authenticate user credentials and return a JWT token."""

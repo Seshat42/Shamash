@@ -9,7 +9,7 @@ from typing import Optional
 
 from .config import CONFIG
 
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine, select, text
 from sqlalchemy.orm import Session, sessionmaker
 
 from .models import Base, User, MediaItem
@@ -26,6 +26,12 @@ SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
 Base.metadata.create_all(bind=engine)
 
+# Migration: ensure the `role` column exists on the users table
+with engine.begin() as conn:  # pragma: no cover - executed at import time
+    existing = [row[1] for row in conn.execute(text("PRAGMA table_info(users)"))]
+    if "role" not in existing:
+        conn.execute(text("ALTER TABLE users ADD COLUMN role STRING NOT NULL DEFAULT 'user'"))
+
 
 def get_session() -> Session:
     """Return a new database session."""
@@ -34,11 +40,11 @@ def get_session() -> Session:
 
 # User management CRUD -------------------------------------------------------
 
-def add_user(username: str, password: str) -> User:
-    """Create a new user with a hashed password."""
+def add_user(username: str, password: str, role: str = "user") -> User:
+    """Create a new user with a hashed password and role."""
     session = get_session()
     password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
-    user = User(username=username, password_hash=password_hash)
+    user = User(username=username, password_hash=password_hash, role=role)
     session.add(user)
     session.commit()
     session.refresh(user)

@@ -23,8 +23,10 @@ The server starts an HTTP API on the specified host and port.
 ## Authentication
 
 Create a user in the database using `server/db.py.add_user()` or through a
-future management endpoint. Obtain a token via `/auth/login` and pass it as a
-`Bearer` token when accessing protected routes such as `/stream/ping`.
+future management endpoint. Users have a `role` of either `user` or `admin`.
+Administrative actions, such as managing other accounts, require an `admin`
+token. Obtain a token via `/auth/login` and pass it as a `Bearer` token when
+accessing protected routes such as `/stream/ping` or `/users`.
 
 ## Health Endpoints
 

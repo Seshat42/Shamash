@@ -4,8 +4,8 @@ This document outlines the planned approach to security for the Shamash project.
 
 ## Authentication and Roles
 
-- **Admin vs. User Roles**: The server will distinguish between administrative users and regular users. Administrators manage media libraries and server settings, while regular users stream content.
-- **Token Handling**: Authentication will rely on JSON Web Tokens (JWTs). Tokens will be issued upon login and included in each API request's `Authorization` header. Tokens will be time-limited and refreshed periodically to reduce risk of compromise.
+- **Admin vs. User Roles**: The server distinguishes between administrative users and regular users. Administrators manage media libraries and server settings, while regular users stream content. User management routes require an admin token.
+- **Token Handling**: Authentication relies on JSON Web Tokens (JWTs). Tokens are issued upon login and included in each API request's `Authorization` header. Tokens are time-limited and refreshed periodically to reduce risk of compromise.
 - **Storage of Credentials**: Credentials are hashed with `bcrypt` and never stored in plain text.
 
 ## Dependency Management

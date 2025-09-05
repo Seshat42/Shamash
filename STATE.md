@@ -7,6 +7,9 @@
 - T1: Replace generic exception handlers in the client with targeted errors and logging.
 - T2: Document new client error messages in `docs/README.md` and `CHANGELOG.md`.
 - T3: Run `pytest tests/test_client_login.py::test_login_saves_token -q`.
+- T4: Add role-based access control with an admin/user `role` field on users.
+- T5: Document role usage in `README.md`, `SECURITY.md` and note in `CHANGELOG.md`.
+- T6: Run `pytest tests/test_ingestion_users.py::test_user_crud_endpoints -q`.
 
 # Cognitive Ledger
 - Cycle 1: Inspected repository structure and existing placeholder endpoints.
@@ -19,6 +22,9 @@
 - Cycle 8: Documented error messages in `docs/README.md` and updated `CHANGELOG.md`.
 - Cycle 9: Ran `pytest tests/test_client_login.py::test_login_saves_token -q`.
 - Cycle 10: Committed changes and prepared pull request.
+- Cycle 11: Planned role-based access control and updated planning artifacts.
+- Cycle 12: Implemented role column, migration, and admin enforcement on user routes.
+- Cycle 13: Updated tests and documentation, then executed role-based CRUD tests.
 
 # Decision Log
 - D1: Chose database `SELECT 1` query to verify connectivity for ingestion, users, and streaming health.
@@ -26,3 +32,4 @@
 - D3: Expanded existing test rather than adding new functions to match execution command.
 - D4: Utilized `urllib.error` exceptions and logging for clearer client error reporting.
 - D5: Kept user-facing prints for actionable messages while logging full error details.
+- D6: Opted to verify roles against the database per request instead of encoding them into tokens for immediate revocation.
