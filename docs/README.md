@@ -55,6 +55,15 @@ also be provided when using metadata synchronization.
   invalid JSON response`. Review the message to resolve network issues,
   credentials, or file permissions.
 
+## Database Sessions
+
+`server/db.py` wraps every CRUD helper in `try/except/finally` blocks so that
+each session rolls back and closes when an operation fails. This guarantees
+that failed transactions do not leak connections or leave partial writes. When
+adding new queries, follow the same pattern by retrieving a session with
+`db.get_session()` and closing it in a `finally` clause or via a context manager
+that performs the cleanup.
+
 ## Media Ingestion
 
 The `POST /ingestion/` endpoint stores media metadata. The `path` field must be

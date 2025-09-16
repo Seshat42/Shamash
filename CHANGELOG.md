@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- Hardened database CRUD helpers with rollback-and-close handling, added failure
+  simulations in the test suite, and documented the session cleanup pattern.
 - Validated media ingestion paths to accept only HTTP(S) URLs or existing local files and added tests and documentation for the new checks.
 - Pinned `httpx` to `<0.24` for compatibility with Starlette 0.27.
 - Replaced placeholder ping endpoints with database-backed health checks and tests.

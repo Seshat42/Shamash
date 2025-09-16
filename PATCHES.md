@@ -1,7 +1,7 @@
 # Summary
-- Added a Pydantic field validator on `IngestionRequest.path` to accept only HTTP(S) URLs or resolved existing local files while rejecting traversal attempts.
-- Expanded ingestion tests to cover valid local files and invalid URL or traversal submissions, and ensured remote URLs remain accepted.
-- Documented supported ingestion path formats and recorded the validation update in the changelog.
+- Hardened `server/db.py` CRUD helpers with try/except/finally blocks to roll back and close sessions on failure without changing their interfaces.
+- Added pytest regressions that monkeypatch the session factory to simulate commit/query errors and assert rollback plus closure semantics.
+- Documented the defensive session pattern in `docs/README.md` and noted the change in `CHANGELOG.md`.
 
 # Testing
 - `pytest`

@@ -8,6 +8,10 @@
 - T22: Expand tests to cover valid and invalid ingestion paths for both remote URLs and local files.
 - T23: Document supported ingestion path formats in `docs/README.md`.
 - T24: Record the validation update in `CHANGELOG.md` and ensure `pytest` passes.
+- T25: Wrap database CRUD operations with safe session management to guarantee rollback and closure on errors.
+- T26: Add tests that simulate database failures and confirm sessions are closed and rolled back appropriately.
+- T27: Document the database error-handling approach for future contributors.
+- T28: Update `CHANGELOG.md` and ensure `pytest` passes.
 
 # Cognitive Ledger
 - Cycle 1: Inspected repository structure and existing placeholder endpoints.
@@ -45,6 +49,11 @@
 - Cycle 33: Expanded ingestion tests with valid local files and invalid URL and traversal scenarios.
 - Cycle 34: Documented ingestion path requirements and updated the changelog entry.
 - Cycle 35: Ran the pytest suite to verify the ingestion validation and tests.
+- Cycle 36: Captured the session cleanup requirements and refreshed planning artifacts for the database reliability work.
+- Cycle 37: Refactored `server/db.py` CRUD helpers to wrap sessions in try/except/finally blocks with rollback on failure.
+- Cycle 38: Added regression tests that monkeypatch sessions to simulate commit and query failures, asserting rollback and closure.
+- Cycle 39: Documented the session handling pattern and updated the changelog entry.
+- Cycle 40: Executed the full pytest suite to verify the defensive session handling changes.
 
 # Decision Log
 - D1: Chose database `SELECT 1` query to verify connectivity for ingestion, users, and streaming health.
@@ -57,3 +66,4 @@
 - D8: Moved role enforcement to rely on signed JWT claims to eliminate authorization-time database queries while preserving expiry-based revocation.
 - D9: Queried the Sonarr and Radarr system status endpoints asynchronously and interpreted 401/403 responses as `auth_failed` to detect invalid API keys without blocking the event loop.
 - D10: Normalized accepted local ingestion paths to resolved filesystem locations to prevent traversal and ensure consistency.
+- D11: Chose explicit try/except/finally blocks per CRUD helper to guarantee rollback and closure without altering existing interfaces.
