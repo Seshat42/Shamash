@@ -1,7 +1,7 @@
 # Summary
-- Updated the metadata health check to call the Sonarr and Radarr system status endpoints with API keys, reporting `auth_failed` on authentication errors while keeping the requests asynchronous.
-- Added tests that stub `httpx.AsyncClient` to simulate invalid Sonarr and Radarr API keys and verify the `/metadata/ping` responses.
-- Documented API key troubleshooting guidance and recorded the change in the changelog.
+- Added a Pydantic field validator on `IngestionRequest.path` to accept only HTTP(S) URLs or resolved existing local files while rejecting traversal attempts.
+- Expanded ingestion tests to cover valid local files and invalid URL or traversal submissions, and ensured remote URLs remain accepted.
+- Documented supported ingestion path formats and recorded the validation update in the changelog.
 
 # Testing
 - `pytest`
