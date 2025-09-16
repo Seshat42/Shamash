@@ -4,12 +4,10 @@
 - R3: Update documentation and changelog alongside code modifications.
 
 # Task Requirements
-- T1: Replace generic exception handlers in the client with targeted errors and logging.
-- T2: Document new client error messages in `docs/README.md` and `CHANGELOG.md`.
-- T3: Run `pytest tests/test_client_login.py::test_login_saves_token -q`.
-- T4: Add role-based access control with an admin/user `role` field on users.
-- T5: Document role usage in `README.md`, `SECURITY.md` and note in `CHANGELOG.md`.
-- T6: Run `pytest tests/test_ingestion_users.py::test_user_crud_endpoints -q`.
+- T7: Replace `datetime.utcnow` in token creation with timezone-aware `datetime.now(datetime.UTC)`.
+- T8: Add unit coverage ensuring expired tokens are rejected to validate token expiry logic.
+- T9: Run `pytest` to confirm the suite passes with the timezone-aware change.
+- T10: Update `CHANGELOG.md` with the authentication timestamp adjustment.
 
 # Cognitive Ledger
 - Cycle 1: Inspected repository structure and existing placeholder endpoints.
@@ -25,6 +23,12 @@
 - Cycle 11: Planned role-based access control and updated planning artifacts.
 - Cycle 12: Implemented role column, migration, and admin enforcement on user routes.
 - Cycle 13: Updated tests and documentation, then executed role-based CRUD tests.
+- Cycle 14: Reviewed timezone-aware JWT requirements and repository instructions for the new task.
+- Cycle 15: Refreshed planning artifacts to outline the timezone-aware authentication update.
+- Cycle 16: Replaced naive token expiration timestamps with `datetime.now(datetime.UTC)`.
+- Cycle 17: Added an expiry regression test ensuring `verify_token` rejects expired tokens.
+- Cycle 18: Updated changelog and backlog to capture the timezone-aware authentication change.
+- Cycle 19: Executed the full pytest suite to validate the update.
 
 # Decision Log
 - D1: Chose database `SELECT 1` query to verify connectivity for ingestion, users, and streaming health.
@@ -33,3 +37,4 @@
 - D4: Utilized `urllib.error` exceptions and logging for clearer client error reporting.
 - D5: Kept user-facing prints for actionable messages while logging full error details.
 - D6: Opted to verify roles against the database per request instead of encoding them into tokens for immediate revocation.
+- D7: Simulated expired tokens by monkeypatching `TOKEN_EXPIRE_SECONDS` to a negative value for deterministic testing.

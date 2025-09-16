@@ -23,6 +23,8 @@ All notable changes to this project will be documented in this file.
 - Documented new CLI usage and recorded the rationale in POSTERITY.
 - Implemented POST `/ingestion/` and `/users` CRUD endpoints and added tests.
 - Added role-based access control with admin-only user management routes.
+- Updated JWT token creation to use timezone-aware UTC timestamps for
+  consistent expiry evaluation.
 - Added error handling for Sonarr and Radarr failures with detailed
   `/metadata/sync` responses.
 - Documented failure modes and updated architecture overview.
