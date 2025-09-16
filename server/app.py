@@ -12,6 +12,7 @@ from sqlalchemy import text
 
 from . import db
 from .auth import TokenClaims, auth_router, require_role, token_required
+from .config import resolve_jwt_secret, warn_if_default_jwt_secret
 from .integrations.radarr import RADARR_API_KEY, RADARR_URL, refresh_movies
 from .integrations.sonarr import SONARR_API_KEY, SONARR_URL, refresh_series
 
@@ -249,6 +250,8 @@ async def stream_media(item_id: int, _: TokenClaims = Depends(token_required)):
 
 def create_app() -> FastAPI:
     """Create and configure the FastAPI application."""
+    warn_if_default_jwt_secret(resolve_jwt_secret())
+
     app = FastAPI(title="Shamash Media Server")
 
     app.include_router(media_ingestion_router)

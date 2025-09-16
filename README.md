@@ -74,6 +74,12 @@ settings:
 * `SONARR_API_KEY` and `RADARR_API_KEY` – credentials for Sonarr and Radarr.
 * `SONARR_URL` and `RADARR_URL` – set custom service URLs.
 
+The bundled configuration ships with a placeholder `jwt_secret` value of
+`change_this_secret`. The server logs a **critical** warning on startup when the
+effective secret matches this default to highlight insecure deployments. Update
+`config/default.yaml` or set `JWT_SECRET` in production environments to silence
+the warning while leaving local development unaffected.
+
 ## Configuration Files
 
 The `config/` directory contains YAML files used by both the server and the
