@@ -29,6 +29,8 @@ All notable changes to this project will be documented in this file.
   consistent expiry evaluation.
 - Added error handling for Sonarr and Radarr failures with detailed
   `/metadata/sync` responses.
+- Updated `/metadata/ping` to perform authenticated Sonarr and Radarr status
+  checks and surface invalid API key errors.
 - Documented failure modes and updated architecture overview.
 - Documented external API key setup and updated architecture overview.
 - Added architecture overview in `docs/architecture.md` and updated
