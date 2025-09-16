@@ -10,13 +10,16 @@ def test_login_success(temp_db):
     db.add_user("bob", "secret")
     app = create_app()
     client = TestClient(app)
-    response = client.post("/auth/login", json={"username": "bob", "password": "secret"})
+    response = client.post(
+        "/auth/login", json={"username": "bob", "password": "secret"}
+    )
     assert response.status_code == 200
     assert "access_token" in response.json()
 
 
 def test_token_functions():
     from server.auth import create_token, verify_token
+
     token = create_token("carol", "admin")
     claims = verify_token(token)
     assert claims.username == "carol"

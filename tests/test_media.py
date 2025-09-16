@@ -25,7 +25,8 @@ def test_stream_endpoint_serves_file(temp_db, tmp_path):
     app = create_app()
     client = TestClient(app)
     token = create_token("bob", "user")
-    response = client.get(f"/stream/{item.id}", headers={"Authorization": f"Bearer {token}"})
+    response = client.get(
+        f"/stream/{item.id}", headers={"Authorization": f"Bearer {token}"}
+    )
     assert response.status_code == 200
     assert response.content == b"hello"
-

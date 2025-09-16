@@ -31,6 +31,7 @@ def _stub_metadata_client(monkeypatch, status_by_host, header_log):
 def test_metadata_sync_handles_sonarr_error(monkeypatch):
     def fail_series():
         raise httpx.RequestError("boom")
+
     monkeypatch.setattr("server.app.refresh_series", fail_series)
     app = create_app()
     client = TestClient(app)
@@ -41,8 +42,10 @@ def test_metadata_sync_handles_sonarr_error(monkeypatch):
 def test_metadata_sync_handles_radarr_error(monkeypatch):
     def fail_series():
         pass
+
     def fail_movies():
         raise httpx.RequestError("nope")
+
     monkeypatch.setattr("server.app.refresh_series", fail_series)
     monkeypatch.setattr("server.app.refresh_movies", fail_movies)
     app = create_app()

@@ -4,10 +4,10 @@
 - R3: Update documentation and changelog alongside code modifications.
 
 # Task Requirements
-- T33: Add Radarr integration tests that verify header construction, success responses, and RequestError propagation.
-- T34: Add Sonarr integration tests that verify header construction, success responses, and RequestError propagation.
-- T35: Document the mocked integration testing approach in `docs/README.md`.
-- T36: Summarize the test additions in `CHANGELOG.md` and confirm `pytest` passes.
+- T37: Configure `pre-commit` with `black` and `flake8` to enforce repository style.
+- T38: Format the codebase and resolve lint violations uncovered by the new hooks.
+- T39: Add continuous integration that executes linting and `pytest` for every push and pull request.
+- T40: Verify `pre-commit` and `pytest` pass locally to satisfy the new automation.
 
 # Cognitive Ledger
 - Cycle 1: Inspected repository structure and existing placeholder endpoints.
@@ -64,8 +64,13 @@
 
 - Cycle 50: Executed the full pytest suite to verify the mocked integration tests.
 
+- Cycle 51: Reviewed repository tooling requirements, refreshed the plan, and outlined the linting automation approach.
+- Cycle 52: Added `black`, `flake8`, and `pre-commit` dependencies plus configuration, then ran the hooks to reformat the codebase.
+- Cycle 53: Resolved a `flake8` import warning and re-ran `pre-commit` to confirm clean linting results.
+- Cycle 54: Introduced a GitHub Actions workflow that installs dependencies, runs `pre-commit`, and executes `pytest`.
+- Cycle 55: Updated the changelog to capture the tooling changes and ran the full pytest suite.
+
 # Decision Log
-- D13: Validated Sonarr and Radarr helpers by monkeypatching `httpx` calls so tests assert URL/header contracts without external requests.
 - D1: Chose database `SELECT 1` query to verify connectivity for ingestion, users, and streaming health.
 - D2: Implemented HTTP HEAD requests to Sonarr and Radarr for metadata health without requiring sync commands.
 - D3: Expanded existing test rather than adding new functions to match execution command.
@@ -78,3 +83,5 @@
 - D10: Normalized accepted local ingestion paths to resolved filesystem locations to prevent traversal and ensure consistency.
 - D11: Chose explicit try/except/finally blocks per CRUD helper to guarantee rollback and closure without altering existing interfaces.
 - D12: Logged a critical warning for the default JWT secret instead of exiting to preserve simple local development while flagging insecure deployments.
+- D13: Validated Sonarr and Radarr helpers by monkeypatching `httpx` calls so tests assert URL/header contracts without external requests.
+- D14: Standardized formatting and linting by adopting `pre-commit` with `black` and `flake8`, and mirrored the workflow in GitHub Actions.

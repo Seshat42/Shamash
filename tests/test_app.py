@@ -28,9 +28,7 @@ def test_app_includes_routes():
     user_status = client.get("/users/ping").json()["status"]
     assert user_status in {"ok", "db_unreachable"}
 
-    stream = client.get(
-        "/stream/ping", headers={"Authorization": f"Bearer {token}"}
-    )
+    stream = client.get("/stream/ping", headers={"Authorization": f"Bearer {token}"})
     assert stream.json()["status"] in {"ok", "db_unreachable"}
 
 
