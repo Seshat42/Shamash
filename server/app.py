@@ -11,7 +11,7 @@ from .integrations.radarr import refresh_movies, RADARR_URL
 from .integrations.sonarr import refresh_series, SONARR_URL
 from . import db
 
-from .auth import auth_router, token_required, require_role
+from .auth import auth_router, token_required, require_role, TokenClaims
 
 
 # Placeholder routers for future modules
@@ -97,7 +97,7 @@ async def metadata_sync() -> dict[str, str]:
 
 
 @media_router.get("/")
-async def list_media(_: str = Depends(token_required)) -> list[dict]:
+async def list_media(_: TokenClaims = Depends(token_required)) -> list[dict]:
     """Return all available media items."""
     items = db.list_media_items()
     return [
@@ -171,13 +171,13 @@ async def delete_user(
 
 
 @streaming_router.get("/ping")
-async def stream_ping(_: str = Depends(token_required)) -> dict[str, str]:
+async def stream_ping(_: TokenClaims = Depends(token_required)) -> dict[str, str]:
     """Check database connectivity for streaming. Requires a valid token."""
     return {"status": _check_database()}
 
 
 @streaming_router.get("/{item_id}")
-async def stream_media(item_id: int, _: str = Depends(token_required)):
+async def stream_media(item_id: int, _: TokenClaims = Depends(token_required)):
     """Stream a media file or redirect to a remote URL."""
     item = db.get_media_item(item_id)
     if item is None:

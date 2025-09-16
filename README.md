@@ -28,6 +28,10 @@ Administrative actions, such as managing other accounts, require an `admin`
 token. Obtain a token via `/auth/login` and pass it as a `Bearer` token when
 accessing protected routes such as `/stream/ping` or `/users`.
 
+Issued tokens embed the user's role claim so FastAPI dependencies can authorize
+requests without repeating a database lookup. The role claim is signed with the
+rest of the JWT payload, ensuring tampering is rejected during verification.
+
 ## Health Endpoints
 
 Shamash exposes several lightweight health checks:
