@@ -2,11 +2,12 @@
 
 import asyncio
 from pathlib import Path
+from urllib.parse import urlparse
 
 import httpx
 from fastapi import APIRouter, Depends, FastAPI, HTTPException
 from fastapi.responses import FileResponse, RedirectResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from sqlalchemy import text
 
 from . import db
@@ -71,6 +72,43 @@ class IngestionRequest(BaseModel):
     title: str
     path: str
     description: str | None = None
+
+    @field_validator("path")
+    def validate_path(cls, value: str) -> str:
+        """Ensure the path is an HTTP(S) URL or an existing local file."""
+
+        cleaned = value.strip()
+        if not cleaned:
+            raise ValueError("path must not be empty")
+
+        parsed = urlparse(cleaned)
+        scheme = parsed.scheme.lower()
+        if scheme in {"http", "https"}:
+            if parsed.netloc:
+                return cleaned
+            raise ValueError(
+                "path must include a network location when using http or https URLs"
+            )
+        if scheme:
+            raise ValueError(
+                "path must be an http or https URL or an existing local file"
+            )
+
+        candidate = Path(cleaned)
+        if ".." in candidate.parts:
+            raise ValueError("local paths may not contain directory traversal segments")
+
+        try:
+            resolved = candidate.expanduser().resolve(strict=True)
+        except FileNotFoundError as exc:
+            raise ValueError("local path must reference an existing file") from exc
+        except OSError as exc:  # pragma: no cover - unexpected resolution failure
+            raise ValueError("local path could not be resolved") from exc
+
+        if not resolved.is_file():
+            raise ValueError("local path must reference a file")
+
+        return str(resolved)
 
 
 @media_ingestion_router.post("/")

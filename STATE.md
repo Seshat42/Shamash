@@ -4,11 +4,10 @@
 - R3: Update documentation and changelog alongside code modifications.
 
 # Task Requirements
-- T16: Update `_check_service` and `/metadata/ping` to perform authenticated Sonarr and Radarr status requests.
-- T17: Surface explicit authentication failures when Sonarr or Radarr reject the configured API key.
-- T18: Extend tests to mock Sonarr and Radarr invalid-key responses without real network calls.
-- T19: Document API key troubleshooting guidance and record the change in the changelog.
-- T20: Run `pytest` to confirm the suite passes with the new checks.
+- T21: Validate ingestion paths as either HTTP(S) URLs or existing local files without traversal segments.
+- T22: Expand tests to cover valid and invalid ingestion paths for both remote URLs and local files.
+- T23: Document supported ingestion path formats in `docs/README.md`.
+- T24: Record the validation update in `CHANGELOG.md` and ensure `pytest` passes.
 
 # Cognitive Ledger
 - Cycle 1: Inspected repository structure and existing placeholder endpoints.
@@ -40,6 +39,12 @@
 - Cycle 27: Stubbed `httpx.AsyncClient` in tests to simulate invalid Sonarr and Radarr API keys and verified the reported statuses.
 - Cycle 28: Updated documentation and the changelog with API key troubleshooting guidance.
 - Cycle 29: Executed the full pytest suite to confirm the authenticated checks pass across the test suite.
+- Cycle 30: Reviewed ingestion path validation requirements and inspected server ingestion code and tests to scope the update.
+- Cycle 31: Refreshed the planning artifact for the ingestion path validation effort.
+- Cycle 32: Added a Pydantic validator ensuring ingestion paths are constrained to HTTP(S) URLs or existing local files.
+- Cycle 33: Expanded ingestion tests with valid local files and invalid URL and traversal scenarios.
+- Cycle 34: Documented ingestion path requirements and updated the changelog entry.
+- Cycle 35: Ran the pytest suite to verify the ingestion validation and tests.
 
 # Decision Log
 - D1: Chose database `SELECT 1` query to verify connectivity for ingestion, users, and streaming health.
@@ -51,3 +56,4 @@
 - D7: Simulated expired tokens by monkeypatching `TOKEN_EXPIRE_SECONDS` to a negative value for deterministic testing.
 - D8: Moved role enforcement to rely on signed JWT claims to eliminate authorization-time database queries while preserving expiry-based revocation.
 - D9: Queried the Sonarr and Radarr system status endpoints asynchronously and interpreted 401/403 responses as `auth_failed` to detect invalid API keys without blocking the event loop.
+- D10: Normalized accepted local ingestion paths to resolved filesystem locations to prevent traversal and ensure consistency.

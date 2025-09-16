@@ -54,3 +54,12 @@ also be provided when using metadata synchronization.
   such as `Failed to connect to http://localhost:8000` or `Failed to login:
   invalid JSON response`. Review the message to resolve network issues,
   credentials, or file permissions.
+
+## Media Ingestion
+
+The `POST /ingestion/` endpoint stores media metadata. The `path` field must be
+either an `http://` or `https://` URL or a local filesystem path that resolves
+to an existing file. Local paths are expanded, resolved, and rejected when they
+contain traversal segments such as `..` or refer to directories or missing
+files. Provide fully qualified URLs for remote media to avoid validation
+errors.
