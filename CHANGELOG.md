@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- Adopted `black` and `flake8` via `pre-commit`, reformatted the codebase,
+  and resolved lint issues.
+- Added a GitHub Actions workflow to run pre-commit checks and `pytest` on
+  pushes and pull requests.
 - Added mocked Sonarr and Radarr integration tests that verify request URLs, headers, and RequestError propagation without hitting external services.
 - Warn loudly when the JWT signing secret retains the default placeholder,
   covering startup checks with tests and updated documentation.

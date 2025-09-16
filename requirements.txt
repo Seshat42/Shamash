@@ -6,3 +6,6 @@ pytest
 httpx<0.24
 PyYAML
 bcrypt
+black
+flake8
+pre-commit

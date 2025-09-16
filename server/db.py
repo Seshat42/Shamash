@@ -14,7 +14,9 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from .models import Base, User, MediaItem
 
-DEFAULT_DB_PATH = Path(CONFIG.get("server", {}).get("database", Path(__file__).with_name("shamash.db")))
+DEFAULT_DB_PATH = Path(
+    CONFIG.get("server", {}).get("database", Path(__file__).with_name("shamash.db"))
+)
 DB_PATH = Path(os.environ.get("SHAMASH_DB_PATH", DEFAULT_DB_PATH))
 DATABASE_URL = f"sqlite:///{DB_PATH}"
 
@@ -30,7 +32,9 @@ Base.metadata.create_all(bind=engine)
 with engine.begin() as conn:  # pragma: no cover - executed at import time
     existing = [row[1] for row in conn.execute(text("PRAGMA table_info(users)"))]
     if "role" not in existing:
-        conn.execute(text("ALTER TABLE users ADD COLUMN role STRING NOT NULL DEFAULT 'user'"))
+        conn.execute(
+            text("ALTER TABLE users ADD COLUMN role STRING NOT NULL DEFAULT 'user'")
+        )
 
 
 def get_session() -> Session:
@@ -39,6 +43,7 @@ def get_session() -> Session:
 
 
 # User management CRUD -------------------------------------------------------
+
 
 def add_user(username: str, password: str, role: str = "user") -> User:
     """Create a new user with a hashed password and role."""
@@ -74,9 +79,7 @@ def update_user_password(username: str, password: str) -> bool:
         user = session.scalar(select(User).where(User.username == username))
         if user is None:
             return False
-        user.password_hash = (
-            bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
-        )
+        user.password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
         session.commit()
         return True
     except Exception:
@@ -110,6 +113,7 @@ def get_password_hash(username: str) -> Optional[str]:
 
 
 # Media ingestion CRUD -------------------------------------------------------
+
 
 def create_media_item(
     title: str, path: str, description: str | None = None

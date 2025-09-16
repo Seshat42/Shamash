@@ -46,7 +46,9 @@ def parse_args() -> argparse.Namespace:
     subparsers.add_parser("ping", help="Check server availability")
     subparsers.add_parser("sync", help="Synchronize metadata")
     subparsers.add_parser("list", help="List available media items")
-    login_parser = subparsers.add_parser("login", help="Obtain and optionally save a JWT token")
+    login_parser = subparsers.add_parser(
+        "login", help="Obtain and optionally save a JWT token"
+    )
     login_parser.add_argument("username", help="Account username")
     login_parser.add_argument("password", help="Account password")
     login_parser.add_argument(

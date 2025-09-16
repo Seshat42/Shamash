@@ -56,15 +56,21 @@ def verify_token(token: str) -> TokenClaims:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     except jwt.PyJWTError as exc:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token") from exc
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
+        ) from exc
     username = payload.get("sub")
     role = payload.get("role")
     if username is None or role is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token payload")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token payload"
+        )
     return TokenClaims(username=username, role=role)
 
 
-def token_required(credentials: HTTPAuthorizationCredentials = Depends(security)) -> TokenClaims:
+def token_required(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+) -> TokenClaims:
     """FastAPI dependency that validates a bearer token."""
     return verify_token(credentials.credentials)
 
@@ -90,8 +96,12 @@ async def login(credentials: LoginRequest) -> dict[str, str]:
     password = credentials.password
     user = db.get_user(username)
     if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
+        )
     if not bcrypt.checkpw(password.encode(), user.password_hash.encode()):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
+        )
     token = create_token(user.username, user.role)
     return {"access_token": token}

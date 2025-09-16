@@ -108,9 +108,7 @@ def test_user_crud_endpoints(temp_db):
     assert resp.json()["username"] == "dave"
     assert resp.json()["role"] == "user"
 
-    resp = client.put(
-        "/users/dave", json={"password": "new"}, headers=admin_headers
-    )
+    resp = client.put("/users/dave", json={"password": "new"}, headers=admin_headers)
     assert resp.status_code == 200
 
     resp = client.delete("/users/dave", headers=admin_headers)

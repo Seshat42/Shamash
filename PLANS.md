@@ -1,6 +1,6 @@
 # Plan
 
-1. Inspect the Sonarr and Radarr integration helpers to catalog expected URLs, headers, and error propagation behavior.
-2. Add pytest modules that monkeypatch `httpx` calls to assert the integrations send the correct requests and raise `RequestError` on failures for both success and error paths.
-3. Document the mocked integration test strategy in `docs/README.md` and summarize the additions in `CHANGELOG.md`.
-4. Execute `pytest` to verify the new tests and update `STATE.md`, `PATCHES.md`, `VERIFICATIONS.md`, and related artifacts.
+1. Review repository tooling expectations and inventory formatting or linting gaps that `black`, `flake8`, and `pre-commit` must cover.
+2. Add lightweight dependencies plus a `.pre-commit-config.yaml` that wires `black` and `flake8`, then run the hooks to format and fix violations.
+3. Introduce a GitHub Actions workflow that installs dependencies, runs `pre-commit` checks, and executes `pytest` for regression coverage.
+4. Update documentation artifacts (`CHANGELOG.md`, `STATE.md`, `PATCHES.md`, `VERIFICATIONS.md`) to reflect the new tooling and verification steps.
