@@ -3,6 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- Added mocked Sonarr and Radarr integration tests that verify request URLs, headers, and RequestError propagation without hitting external services.
 - Warn loudly when the JWT signing secret retains the default placeholder,
   covering startup checks with tests and updated documentation.
 - Hardened database CRUD helpers with rollback-and-close handling, added failure

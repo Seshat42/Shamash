@@ -57,6 +57,10 @@ must also be provided when using metadata synchronization.
   invalid JSON response`. Review the message to resolve network issues,
   credentials, or file permissions.
 
+## Testing
+
+`tests/test_sonarr.py` and `tests/test_radarr.py` monkeypatch `httpx` so the Sonarr and Radarr integrations stay deterministic. The tests assert that each helper targets the `/api/v3` endpoints, includes `X-Api-Key` headers when set, and re-raises `httpx.RequestError` for failures. Follow this pattern for new service clients to avoid contacting real servers during the suite.
+
 ## Database Sessions
 
 `server/db.py` wraps every CRUD helper in `try/except/finally` blocks so that

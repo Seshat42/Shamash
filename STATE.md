@@ -4,18 +4,10 @@
 - R3: Update documentation and changelog alongside code modifications.
 
 # Task Requirements
-- T21: Validate ingestion paths as either HTTP(S) URLs or existing local files without traversal segments.
-- T22: Expand tests to cover valid and invalid ingestion paths for both remote URLs and local files.
-- T23: Document supported ingestion path formats in `docs/README.md`.
-- T24: Record the validation update in `CHANGELOG.md` and ensure `pytest` passes.
-- T25: Wrap database CRUD operations with safe session management to guarantee rollback and closure on errors.
-- T26: Add tests that simulate database failures and confirm sessions are closed and rolled back appropriately.
-- T27: Document the database error-handling approach for future contributors.
-- T28: Update `CHANGELOG.md` and ensure `pytest` passes.
-- T29: Warn or exit when the JWT secret remains the default value on startup.
-- T30: Add tests covering default versus custom JWT secret handling.
-- T31: Document JWT secret configuration expectations in the READMEs.
-- T32: Update `CHANGELOG.md` and run `pytest`.
+- T33: Add Radarr integration tests that verify header construction, success responses, and RequestError propagation.
+- T34: Add Sonarr integration tests that verify header construction, success responses, and RequestError propagation.
+- T35: Document the mocked integration testing approach in `docs/README.md`.
+- T36: Summarize the test additions in `CHANGELOG.md` and confirm `pytest` passes.
 
 # Cognitive Ledger
 - Cycle 1: Inspected repository structure and existing placeholder endpoints.
@@ -64,7 +56,16 @@
 - Cycle 44: Documented the secret expectations in the READMEs and updated the changelog entry.
 - Cycle 45: Ran the full pytest suite to validate the warning behavior.
 
+- Cycle 46: Reviewed Sonarr and Radarr integrations plus repository guidelines to scope HTTP mocking tests.
+
+- Cycle 47: Added Radarr integration tests that verify request URLs, headers, and error propagation via monkeypatched `httpx` calls.
+- Cycle 48: Added Sonarr integration tests covering success paths, headers, and RequestError propagation with mocked HTTP calls.
+- Cycle 49: Documented the mocked integration testing strategy and summarized the update in the changelog.
+
+- Cycle 50: Executed the full pytest suite to verify the mocked integration tests.
+
 # Decision Log
+- D13: Validated Sonarr and Radarr helpers by monkeypatching `httpx` calls so tests assert URL/header contracts without external requests.
 - D1: Chose database `SELECT 1` query to verify connectivity for ingestion, users, and streaming health.
 - D2: Implemented HTTP HEAD requests to Sonarr and Radarr for metadata health without requiring sync commands.
 - D3: Expanded existing test rather than adding new functions to match execution command.
