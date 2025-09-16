@@ -20,6 +20,8 @@ All notable changes to this project will be documented in this file.
   `play`) and streaming via external players.
 - Replaced generic client exception handling with targeted errors and structured
   logging.
+- Embedded user roles directly in JWT payloads and authorized requests from the
+  signed claims instead of querying the database.
 - Documented new CLI usage and recorded the rationale in POSTERITY.
 - Implemented POST `/ingestion/` and `/users` CRUD endpoints and added tests.
 - Added role-based access control with admin-only user management routes.

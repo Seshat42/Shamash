@@ -4,10 +4,11 @@
 - R3: Update documentation and changelog alongside code modifications.
 
 # Task Requirements
-- T7: Replace `datetime.utcnow` in token creation with timezone-aware `datetime.now(datetime.UTC)`.
-- T8: Add unit coverage ensuring expired tokens are rejected to validate token expiry logic.
-- T9: Run `pytest` to confirm the suite passes with the timezone-aware change.
-- T10: Update `CHANGELOG.md` with the authentication timestamp adjustment.
+- T11: Include the user's role in JWT creation payloads.
+- T12: Ensure `require_role` authorizes using token claims without database queries.
+- T13: Update and expand tests covering role claims and authorization.
+- T14: Document the JWT role claim changes in README and CHANGELOG.
+- T15: Run `pytest` to confirm the suite passes after the updates.
 
 # Cognitive Ledger
 - Cycle 1: Inspected repository structure and existing placeholder endpoints.
@@ -29,6 +30,11 @@
 - Cycle 17: Added an expiry regression test ensuring `verify_token` rejects expired tokens.
 - Cycle 18: Updated changelog and backlog to capture the timezone-aware authentication change.
 - Cycle 19: Executed the full pytest suite to validate the update.
+- Cycle 20: Reviewed authentication modules and existing tests to scope the role claim updates.
+- Cycle 21: Embedded role claims into token creation and verification while refactoring dependencies to consume structured claims.
+- Cycle 22: Updated media and auth tests to exercise role-aware tokens and added coverage for authorization decisions.
+- Cycle 23: Documented the role claim workflow in README and CHANGELOG and pruned the backlog item.
+- Cycle 24: Ran the full pytest suite to validate the role-embedded token flow.
 
 # Decision Log
 - D1: Chose database `SELECT 1` query to verify connectivity for ingestion, users, and streaming health.
@@ -36,5 +42,6 @@
 - D3: Expanded existing test rather than adding new functions to match execution command.
 - D4: Utilized `urllib.error` exceptions and logging for clearer client error reporting.
 - D5: Kept user-facing prints for actionable messages while logging full error details.
-- D6: Opted to verify roles against the database per request instead of encoding them into tokens for immediate revocation.
+- D6: Opted to verify roles against the database per request instead of encoding them into tokens for immediate revocation (superseded by D8).
 - D7: Simulated expired tokens by monkeypatching `TOKEN_EXPIRE_SECONDS` to a negative value for deterministic testing.
+- D8: Moved role enforcement to rely on signed JWT claims to eliminate authorization-time database queries while preserving expiry-based revocation.

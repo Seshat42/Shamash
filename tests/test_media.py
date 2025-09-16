@@ -9,7 +9,7 @@ def test_media_list_endpoint(temp_db, tmp_path):
     db.add_user("alice", "pw")
     app = create_app()
     client = TestClient(app)
-    token = create_token("alice")
+    token = create_token("alice", "user")
     response = client.get("/media/", headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 200
     data = response.json()
@@ -24,7 +24,7 @@ def test_stream_endpoint_serves_file(temp_db, tmp_path):
     db.add_user("bob", "pw")
     app = create_app()
     client = TestClient(app)
-    token = create_token("bob")
+    token = create_token("bob", "user")
     response = client.get(f"/stream/{item.id}", headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 200
     assert response.content == b"hello"
