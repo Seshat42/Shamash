@@ -1,6 +1,9 @@
+import logging
+
 from fastapi.testclient import TestClient
-from server.app import create_app
+
 from server import db
+from server.app import create_app
 
 
 def test_app_includes_routes():
@@ -29,3 +32,23 @@ def test_app_includes_routes():
         "/stream/ping", headers={"Authorization": f"Bearer {token}"}
     )
     assert stream.json()["status"] in {"ok", "db_unreachable"}
+
+
+def test_create_app_warns_on_default_jwt_secret(caplog, monkeypatch):
+    monkeypatch.delenv("JWT_SECRET", raising=False)
+    caplog.set_level(logging.CRITICAL, logger="server.config")
+
+    create_app()
+
+    messages = [record.getMessage() for record in caplog.records]
+    assert any("default insecure value" in message for message in messages)
+
+
+def test_create_app_skips_warning_with_custom_secret(caplog, monkeypatch):
+    monkeypatch.setenv("JWT_SECRET", "super_secret_value")
+    caplog.set_level(logging.CRITICAL, logger="server.config")
+
+    create_app()
+
+    messages = [record.getMessage() for record in caplog.records]
+    assert all("default insecure value" not in message for message in messages)

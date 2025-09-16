@@ -12,6 +12,10 @@
 - T26: Add tests that simulate database failures and confirm sessions are closed and rolled back appropriately.
 - T27: Document the database error-handling approach for future contributors.
 - T28: Update `CHANGELOG.md` and ensure `pytest` passes.
+- T29: Warn or exit when the JWT secret remains the default value on startup.
+- T30: Add tests covering default versus custom JWT secret handling.
+- T31: Document JWT secret configuration expectations in the READMEs.
+- T32: Update `CHANGELOG.md` and run `pytest`.
 
 # Cognitive Ledger
 - Cycle 1: Inspected repository structure and existing placeholder endpoints.
@@ -54,6 +58,11 @@
 - Cycle 38: Added regression tests that monkeypatch sessions to simulate commit and query failures, asserting rollback and closure.
 - Cycle 39: Documented the session handling pattern and updated the changelog entry.
 - Cycle 40: Executed the full pytest suite to verify the defensive session handling changes.
+- Cycle 41: Reviewed JWT secret handling requirements and refreshed the implementation plan.
+- Cycle 42: Added configuration helpers to resolve the JWT secret, warn on the default, and updated auth plus app startup.
+- Cycle 43: Extended application tests to assert the warning fires for the default secret and stays silent with a custom override.
+- Cycle 44: Documented the secret expectations in the READMEs and updated the changelog entry.
+- Cycle 45: Ran the full pytest suite to validate the warning behavior.
 
 # Decision Log
 - D1: Chose database `SELECT 1` query to verify connectivity for ingestion, users, and streaming health.
@@ -67,3 +76,4 @@
 - D9: Queried the Sonarr and Radarr system status endpoints asynchronously and interpreted 401/403 responses as `auth_failed` to detect invalid API keys without blocking the event loop.
 - D10: Normalized accepted local ingestion paths to resolved filesystem locations to prevent traversal and ensure consistency.
 - D11: Chose explicit try/except/finally blocks per CRUD helper to guarantee rollback and closure without altering existing interfaces.
+- D12: Logged a critical warning for the default JWT secret instead of exiting to preserve simple local development while flagging insecure deployments.

@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- Warn loudly when the JWT signing secret retains the default placeholder,
+  covering startup checks with tests and updated documentation.
 - Hardened database CRUD helpers with rollback-and-close handling, added failure
   simulations in the test suite, and documented the session cleanup pattern.
 - Validated media ingestion paths to accept only HTTP(S) URLs or existing local files and added tests and documentation for the new checks.

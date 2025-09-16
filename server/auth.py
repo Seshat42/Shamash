@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 import datetime
-import os
-
 from dataclasses import dataclass
 
 import bcrypt
@@ -14,12 +12,10 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel
 
 from . import db
-from .config import CONFIG
+from .config import resolve_jwt_secret
 
 
-SECRET_KEY = os.environ.get(
-    "JWT_SECRET", CONFIG.get("server", {}).get("jwt_secret", "change_this_secret")
-)
+SECRET_KEY = resolve_jwt_secret()
 ALGORITHM = "HS256"
 TOKEN_EXPIRE_SECONDS = 3600
 

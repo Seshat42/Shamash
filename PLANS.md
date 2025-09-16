@@ -1,6 +1,6 @@
 # Plan
 
-1. Refactor database CRUD helpers in `server/db.py` to use try/except/finally blocks (or helper context) so sessions roll back and close on error without changing public interfaces.
-2. Introduce regression tests that monkeypatch the session factory to simulate commit/query failures and assert rollback/close behavior alongside existing CRUD coverage.
-3. Document the defensive session handling approach in the appropriate documentation and summarize the change in `CHANGELOG.md`.
-4. Execute `pytest` to confirm all tests pass and update project artifacts (`STATE.md`, `PATCHES.md`, `VERIFICATIONS.md`, `TODO.md`).
+1. Add a configuration helper that resolves the effective JWT secret, warns when it remains the insecure default, and integrate the check into server startup and auth secret selection.
+2. Extend the pytest suite to capture the warning for the default secret and confirm silence when a custom secret is provided.
+3. Document the secret requirements in the READMEs, summarize the change in the changelog, and refresh project artifacts before running pytest.
+4. Execute `pytest` to validate the behavior and update `STATE.md`, `PATCHES.md`, `VERIFICATIONS.md`, and related artifacts.

@@ -31,8 +31,10 @@ The API exposes lightweight health endpoints:
 ### Environment Variables
 
 Set the `JWT_SECRET` variable or edit `config/default.yaml` to configure the
-secret used for signing JWT tokens. `SONARR_API_KEY` and `RADARR_API_KEY` must
-also be provided when using metadata synchronization.
+secret used for signing JWT tokens. When the server starts with the placeholder
+`change_this_secret`, it logs a **critical** warning so production deployments
+do not proceed with the insecure default. `SONARR_API_KEY` and `RADARR_API_KEY`
+must also be provided when using metadata synchronization.
 
 ## Troubleshooting
 
