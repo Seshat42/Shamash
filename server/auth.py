@@ -38,7 +38,8 @@ def create_token(username: str) -> str:
     """Generate a JWT token for the specified user."""
     payload = {
         "sub": username,
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(seconds=TOKEN_EXPIRE_SECONDS),
+        "exp": datetime.datetime.now(datetime.UTC)
+        + datetime.timedelta(seconds=TOKEN_EXPIRE_SECONDS),
     }
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 

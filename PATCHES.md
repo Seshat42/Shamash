@@ -1,7 +1,7 @@
 # Summary
-- Added `role` column to users with migration and CRUD support.
-- Enforced admin-only access on user management routes via `require_role` dependency.
-- Documented roles in README and SECURITY guidelines and updated tests.
+- Replaced JWT expiration timestamp generation with timezone-aware `datetime.now(datetime.UTC)`.
+- Added an authentication test asserting expired tokens raise a 401 via `verify_token`.
+- Documented the timezone-aware authentication update in the changelog and backlog artifacts.
 
 # Testing
-- `pytest tests/test_ingestion_users.py::test_user_crud_endpoints -q`
+- `pytest`

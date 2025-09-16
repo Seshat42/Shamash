@@ -1,8 +1,8 @@
 # Plan
 
-1. Add `role` column to `User` model and database with migration logic.
-2. Update CRUD utilities and tests to handle user roles.
-3. Implement `require_role` FastAPI dependency and secure user management endpoints.
-4. Document role-based access in `README.md` and `SECURITY.md`, and note in `CHANGELOG.md`.
-5. Run `pytest tests/test_ingestion_users.py::test_user_crud_endpoints -q`.
-6. Commit changes and open a pull request.
+1. Review current JWT timestamp handling in `server/auth.py` and identify replacements for `datetime.utcnow`.
+2. Update token generation to use `datetime.now(datetime.UTC)` ensuring timezone awareness.
+3. Extend `tests/test_auth.py` with coverage that asserts expired tokens are rejected.
+4. Run `pytest` to verify the suite passes with the timezone-aware change.
+5. Update documentation artifacts including `CHANGELOG.md`, `STATE.md`, `PATCHES.md`, and `VERIFICATIONS.md`.
+6. Commit the changes and prepare the pull request message.
