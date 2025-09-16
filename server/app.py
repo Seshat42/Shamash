@@ -1,17 +1,18 @@
 """FastAPI application for the Shamash media server."""
 
-from fastapi import FastAPI, APIRouter, Depends, HTTPException
-from fastapi.responses import FileResponse, RedirectResponse
+import asyncio
 from pathlib import Path
-from pydantic import BaseModel
+
 import httpx
+from fastapi import APIRouter, Depends, FastAPI, HTTPException
+from fastapi.responses import FileResponse, RedirectResponse
+from pydantic import BaseModel
 from sqlalchemy import text
 
-from .integrations.radarr import refresh_movies, RADARR_URL
-from .integrations.sonarr import refresh_series, SONARR_URL
 from . import db
-
-from .auth import auth_router, token_required, require_role, TokenClaims
+from .auth import TokenClaims, auth_router, require_role, token_required
+from .integrations.radarr import RADARR_API_KEY, RADARR_URL, refresh_movies
+from .integrations.sonarr import SONARR_API_KEY, SONARR_URL, refresh_series
 
 
 # Placeholder routers for future modules
@@ -22,14 +23,29 @@ streaming_router = APIRouter(prefix="/stream", tags=["stream"])
 media_router = APIRouter(prefix="/media", tags=["media"])
 
 
-async def _check_service(url: str) -> str:
-    """Return ``"ok"`` if an HTTP HEAD succeeds, otherwise ``"unreachable"``."""
+async def _check_service(base_url: str, api_key: str | None) -> str:
+    """Probe an external service and return its health status string.
+
+    A service is considered ``"ok"`` when the authenticated status endpoint
+    responds successfully. If the request fails due to missing or invalid API
+    credentials the function returns ``"auth_failed"``. Network errors and
+    timeouts are reported as ``"unreachable"`` and any other HTTP response code
+    is mapped to ``"error"``.
+    """
+
+    status_url = f"{base_url.rstrip('/')}/api/v3/system/status"
+    headers = {"X-Api-Key": api_key} if api_key else {}
     try:
         async with httpx.AsyncClient(timeout=2) as client:
-            await client.head(url)
-        return "ok"
+            response = await client.get(status_url, headers=headers)
     except httpx.RequestError:
         return "unreachable"
+
+    if response.status_code in {401, 403}:
+        return "auth_failed"
+    if response.is_success:
+        return "ok"
+    return "error"
 
 
 def _check_database() -> str:
@@ -70,9 +86,12 @@ async def ingest_media(item: IngestionRequest) -> dict[str, int | str | None]:
 
 @metadata_sync_router.get("/ping")
 async def metadata_ping() -> dict[str, str]:
-    """Check connectivity with Sonarr, Radarr and the database."""
-    sonarr_status = await _check_service(SONARR_URL)
-    radarr_status = await _check_service(RADARR_URL)
+    """Check connectivity and authentication with Sonarr, Radarr, and the database."""
+
+    sonarr_status, radarr_status = await asyncio.gather(
+        _check_service(SONARR_URL, SONARR_API_KEY),
+        _check_service(RADARR_URL, RADARR_API_KEY),
+    )
     return {
         "sonarr": sonarr_status,
         "radarr": radarr_status,

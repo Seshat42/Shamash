@@ -23,7 +23,8 @@ Use `/auth/login` to obtain a JWT token. Include the token in the
 The API exposes lightweight health endpoints:
 
 * `GET /ingestion/ping` &ndash; verifies database connectivity for media ingestion.
-* `GET /metadata/ping` &ndash; checks reachability of Sonarr and Radarr and the database.
+* `GET /metadata/ping` &ndash; checks reachability of Sonarr and Radarr and the database. The endpoint performs authenticated status
+  requests and reports `auth_failed` when API keys are missing or invalid.
 * `GET /users/ping` &ndash; verifies database connectivity for user management.
 * `GET /stream/ping` &ndash; verifies database connectivity for streaming (requires a token).
 
@@ -40,7 +41,10 @@ also be provided when using metadata synchronization.
   `config/`.
 * **Sonarr/Radarr unreachable** &ndash; Verify `SONARR_API_KEY` and
   `RADARR_API_KEY` environment variables are set and the services are
-  accessible at their configured URLs.
+  accessible at their configured URLs. When `/metadata/ping` returns
+  `auth_failed` for either service, double-check the API key values, reset them
+  in the Sonarr or Radarr UI if necessary, and restart the Shamash server to
+  reload the environment.
 * **Metadata sync failed** &ndash; `/metadata/sync` returns `sonarr_error` or
   `radarr_error` when requests to these services fail. Check the server logs for
   details and retry once the external services are reachable.

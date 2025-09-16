@@ -1,7 +1,7 @@
 # Summary
-- Embedded user roles in JWT payloads, returning structured claims and enforcing authorization directly from signed tokens.
-- Refactored the login flow and FastAPI dependencies to rely on token claims instead of database lookups, and refreshed media route annotations.
-- Expanded authentication tests for role-aware tokens and documented the behavior changes in the README and changelog.
+- Updated the metadata health check to call the Sonarr and Radarr system status endpoints with API keys, reporting `auth_failed` on authentication errors while keeping the requests asynchronous.
+- Added tests that stub `httpx.AsyncClient` to simulate invalid Sonarr and Radarr API keys and verify the `/metadata/ping` responses.
+- Documented API key troubleshooting guidance and recorded the change in the changelog.
 
 # Testing
 - `pytest`

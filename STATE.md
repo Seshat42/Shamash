@@ -4,11 +4,11 @@
 - R3: Update documentation and changelog alongside code modifications.
 
 # Task Requirements
-- T11: Include the user's role in JWT creation payloads.
-- T12: Ensure `require_role` authorizes using token claims without database queries.
-- T13: Update and expand tests covering role claims and authorization.
-- T14: Document the JWT role claim changes in README and CHANGELOG.
-- T15: Run `pytest` to confirm the suite passes after the updates.
+- T16: Update `_check_service` and `/metadata/ping` to perform authenticated Sonarr and Radarr status requests.
+- T17: Surface explicit authentication failures when Sonarr or Radarr reject the configured API key.
+- T18: Extend tests to mock Sonarr and Radarr invalid-key responses without real network calls.
+- T19: Document API key troubleshooting guidance and record the change in the changelog.
+- T20: Run `pytest` to confirm the suite passes with the new checks.
 
 # Cognitive Ledger
 - Cycle 1: Inspected repository structure and existing placeholder endpoints.
@@ -35,6 +35,11 @@
 - Cycle 22: Updated media and auth tests to exercise role-aware tokens and added coverage for authorization decisions.
 - Cycle 23: Documented the role claim workflow in README and CHANGELOG and pruned the backlog item.
 - Cycle 24: Ran the full pytest suite to validate the role-embedded token flow.
+- Cycle 25: Reviewed metadata health checks and integration modules, then refreshed planning artifacts for the authenticated ping update.
+- Cycle 26: Reworked `_check_service` to call the authenticated system status endpoints and parallelized the Sonarr/Radarr probes in `/metadata/ping`.
+- Cycle 27: Stubbed `httpx.AsyncClient` in tests to simulate invalid Sonarr and Radarr API keys and verified the reported statuses.
+- Cycle 28: Updated documentation and the changelog with API key troubleshooting guidance.
+- Cycle 29: Executed the full pytest suite to confirm the authenticated checks pass across the test suite.
 
 # Decision Log
 - D1: Chose database `SELECT 1` query to verify connectivity for ingestion, users, and streaming health.
@@ -45,3 +50,4 @@
 - D6: Opted to verify roles against the database per request instead of encoding them into tokens for immediate revocation (superseded by D8).
 - D7: Simulated expired tokens by monkeypatching `TOKEN_EXPIRE_SECONDS` to a negative value for deterministic testing.
 - D8: Moved role enforcement to rely on signed JWT claims to eliminate authorization-time database queries while preserving expiry-based revocation.
+- D9: Queried the Sonarr and Radarr system status endpoints asynchronously and interpreted 401/403 responses as `auth_failed` to detect invalid API keys without blocking the event loop.
