@@ -4,10 +4,9 @@
 - R3: Update documentation and changelog alongside code modifications.
 
 # Task Requirements
-- T37: Configure `pre-commit` with `black` and `flake8` to enforce repository style.
-- T38: Format the codebase and resolve lint violations uncovered by the new hooks.
-- T39: Add continuous integration that executes linting and `pytest` for every push and pull request.
-- T40: Verify `pre-commit` and `pytest` pass locally to satisfy the new automation.
+- T41: Build reproducible PyInstaller executables for the client and server.
+- T42: Configure GitHub Actions to test on Linux, macOS, and Windows and publish tagged releases with binaries.
+- T43: Document the release process, update the changelog, and clarify tagging instructions.
 
 # Cognitive Ledger
 - Cycle 1: Inspected repository structure and existing placeholder endpoints.
@@ -70,6 +69,18 @@
 - Cycle 54: Introduced a GitHub Actions workflow that installs dependencies, runs `pre-commit`, and executes `pytest`.
 - Cycle 55: Updated the changelog to capture the tooling changes and ran the full pytest suite.
 
+- Cycle 56: Reviewed the release packaging objectives, updated task requirements, and refreshed the planning artifact to cover PyInstaller specs and automation.
+
+- Cycle 57: Authored PyInstaller spec files for the client and server with bundled configuration data.
+
+- Cycle 58: Ran PyInstaller locally on Linux to ensure the client and server specs build successfully.
+
+- Cycle 59: Expanded continuous integration to a cross-platform matrix and scripted a tag-triggered release workflow that packages PyInstaller binaries.
+
+- Cycle 60: Documented the release workflow in the READMEs and promoted changes into the 0.2.0 changelog entry.
+
+- Cycle 61: Ran the full pytest suite to validate the release automation changes.
+
 # Decision Log
 - D1: Chose database `SELECT 1` query to verify connectivity for ingestion, users, and streaming health.
 - D2: Implemented HTTP HEAD requests to Sonarr and Radarr for metadata health without requiring sync commands.
@@ -85,3 +96,5 @@
 - D12: Logged a critical warning for the default JWT secret instead of exiting to preserve simple local development while flagging insecure deployments.
 - D13: Validated Sonarr and Radarr helpers by monkeypatching `httpx` calls so tests assert URL/header contracts without external requests.
 - D14: Standardized formatting and linting by adopting `pre-commit` with `black` and `flake8`, and mirrored the workflow in GitHub Actions.
+- D15: Stored PyInstaller specs in `packaging/pyinstaller` and resolved the project root via `SPECPATH` for portable builds.
+- D16: Packaged tag-triggered release artifacts per platform and automated publishing with GitHub Actions releases.

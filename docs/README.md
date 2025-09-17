@@ -61,6 +61,12 @@ must also be provided when using metadata synchronization.
 
 `tests/test_sonarr.py` and `tests/test_radarr.py` monkeypatch `httpx` so the Sonarr and Radarr integrations stay deterministic. The tests assert that each helper targets the `/api/v3` endpoints, includes `X-Api-Key` headers when set, and re-raises `httpx.RequestError` for failures. Follow this pattern for new service clients to avoid contacting real servers during the suite.
 
+## Release Automation
+
+Pushing a tag that matches `v*.*.*` starts the release workflow. GitHub Actions installs the dependencies, runs `pytest` on Linux, macOS, and Windows, then invokes PyInstaller with the specs in `packaging/pyinstaller/` to build both the client and server executables. The job archives the binaries as `shamash-<tag>-linux.tar.gz`, `shamash-<tag>-macos.tar.gz`, and `shamash-<tag>-windows.zip` before publishing them to the GitHub Release.
+
+Releasing manually follows the same steps locally: run `pytest` and execute the PyInstaller specs (see the README for the exact commands) prior to tagging the repository. Once the tag is pushed, the workflow attaches the freshly built archives to the release for download.
+
 ## Database Sessions
 
 `server/db.py` wraps every CRUD helper in `try/except/finally` blocks so that

@@ -1,6 +1,6 @@
 # Plan
 
-1. Review repository tooling expectations and inventory formatting or linting gaps that `black`, `flake8`, and `pre-commit` must cover.
-2. Add lightweight dependencies plus a `.pre-commit-config.yaml` that wires `black` and `flake8`, then run the hooks to format and fix violations.
-3. Introduce a GitHub Actions workflow that installs dependencies, runs `pre-commit` checks, and executes `pytest` for regression coverage.
-4. Update documentation artifacts (`CHANGELOG.md`, `STATE.md`, `PATCHES.md`, `VERIFICATIONS.md`) to reflect the new tooling and verification steps.
+1. Capture the release packaging requirements in the state log and confirm client and server entry points for PyInstaller specs.
+2. Add deterministic PyInstaller spec files that bundle the configuration directory, then exercise a Linux build to validate the layouts.
+3. Update GitHub Actions to run pytest across Linux, macOS, and Windows and add a tag-driven release workflow that packages binaries after tests and uploads them to the GitHub Release.
+4. Document the release process in `README.md` and `docs/README.md`, create the 0.2.0 changelog entry, and refresh the verification artifacts.

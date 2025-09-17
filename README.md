@@ -133,6 +133,21 @@ docker-compose up
 This configuration mounts the repository into the container so code changes are
 reflected immediately during development.
 
+## Release Process
+
+Follow these steps to cut a tagged release:
+
+1. Update `CHANGELOG.md` with the new version entry and commit the changes.
+2. Run `pytest` and optionally build local executables with PyInstaller to verify the specs:
+
+   ```bash
+   pyinstaller packaging/pyinstaller/shamash_client.spec --noconfirm --distpath dist/pyinstaller --workpath build/pyinstaller
+   pyinstaller packaging/pyinstaller/shamash_server.spec --noconfirm --distpath dist/pyinstaller --workpath build/pyinstaller
+   ```
+3. Create and push a semantic version tag, for example `git tag v0.2.0` followed by `git push origin v0.2.0`.
+
+Pushing a tag that matches `v*.*.*` triggers the release workflow. GitHub Actions runs `pytest` on Linux, macOS, and Windows, builds the PyInstaller executables, and uploads platform archives (e.g. `shamash-v0.2.0-linux.tar.gz`, `shamash-v0.2.0-windows.zip`) to the GitHub Release alongside the tag.
+
 ## Testing
 
 Run the test suite locally before committing changes. Tests live in the

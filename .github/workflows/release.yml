@@ -1,0 +1,114 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build ${{ matrix.artifact_suffix }} binaries
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact_suffix: linux
+            archive_extension: tar.gz
+          - os: macos-latest
+            artifact_suffix: macos
+            archive_extension: tar.gz
+          - os: windows-latest
+            artifact_suffix: windows
+            archive_extension: zip
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install pyinstaller
+
+      - name: Run pytest
+        run: pytest
+
+      - name: Clean build directories
+        run: |
+          python - <<'PY'
+import shutil
+from pathlib import Path
+for path in (Path('dist') / 'pyinstaller', Path('build') / 'pyinstaller'):
+    shutil.rmtree(path, ignore_errors=True)
+PY
+
+      - name: Build client executable
+        run: pyinstaller packaging/pyinstaller/shamash_client.spec --noconfirm --distpath dist/pyinstaller --workpath build/pyinstaller
+
+      - name: Build server executable
+        run: pyinstaller packaging/pyinstaller/shamash_server.spec --noconfirm --distpath dist/pyinstaller --workpath build/pyinstaller
+
+      - name: Package archives (tar.gz)
+        if: runner.os != 'Windows'
+        run: |
+          set -eu
+          STAGING_DIR=build/release
+          rm -rf "$STAGING_DIR"
+          mkdir -p "$STAGING_DIR"
+          cp dist/pyinstaller/shamash-client "$STAGING_DIR/"
+          cp dist/pyinstaller/shamash-server "$STAGING_DIR/"
+          ARCHIVE_NAME="shamash-${GITHUB_REF_NAME}-${{ matrix.artifact_suffix }}.tar.gz"
+          tar -czf "$ARCHIVE_NAME" -C "$STAGING_DIR" .
+          mkdir -p release
+          mv "$ARCHIVE_NAME" release/
+
+      - name: Package archives (zip)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $staging = "build/release"
+          if (Test-Path $staging) { Remove-Item $staging -Recurse -Force }
+          New-Item -ItemType Directory -Path $staging | Out-Null
+          Copy-Item "dist/pyinstaller/shamash-client.exe" -Destination $staging
+          Copy-Item "dist/pyinstaller/shamash-server.exe" -Destination $staging
+          $archiveName = "shamash-$env:GITHUB_REF_NAME-${{ matrix.artifact_suffix }}.zip"
+          Compress-Archive -Path "$staging/*" -DestinationPath $archiveName
+          New-Item -ItemType Directory -Path release -Force | Out-Null
+          Move-Item $archiveName -Destination release
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: shamash-${{ matrix.artifact_suffix }}
+          path: |
+            release/shamash-${{ github.ref_name }}-${{ matrix.artifact_suffix }}.${{ matrix.archive_extension }}
+
+  publish:
+    name: Publish release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Shamash ${{ github.ref_name }}
+          files: release/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

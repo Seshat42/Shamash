@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- _No unreleased changes yet._
+
+## [0.2.0] - 2025-09-16
+- Added PyInstaller build specs and a GitHub Actions release workflow that tests, packages, and publishes binaries for Linux, macOS, and Windows.
+- Documented the automated release process in the README files to guide tagging and local builds.
 - Adopted `black` and `flake8` via `pre-commit`, reformatted the codebase,
   and resolved lint issues.
 - Added a GitHub Actions workflow to run pre-commit checks and `pytest` on
@@ -64,6 +69,7 @@ All notable changes to this project will be documented in this file.
 - Added directory structure, testing workflow and style reminder sections to
   `AGENTS.md`.
 - Documented reasons for FastAPI, JWT and SQLite usage in `POSTERITY.md`.
+
 
 ## [0.1.0] - 2025-07-01
 - Initial project structure with server, client, and documentation directories.
