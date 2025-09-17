@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
-- _No unreleased changes yet._
+- Refined the README production guidance, added links to SECURITY notes, and expanded docs with deployment, security, and release operations referencing the PyInstaller packaging assets.
 
 ## [0.2.0] - 2025-09-16
 - Added PyInstaller build specs and a GitHub Actions release workflow that tests, packages, and publishes binaries for Linux, macOS, and Windows.

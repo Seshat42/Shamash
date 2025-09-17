@@ -1,6 +1,6 @@
 # Plan
 
-1. Capture the release packaging requirements in the state log and confirm client and server entry points for PyInstaller specs.
-2. Add deterministic PyInstaller spec files that bundle the configuration directory, then exercise a Linux build to validate the layouts.
-3. Update GitHub Actions to run pytest across Linux, macOS, and Windows and add a tag-driven release workflow that packages binaries after tests and uploads them to the GitHub Release.
-4. Document the release process in `README.md` and `docs/README.md`, create the 0.2.0 changelog entry, and refresh the verification artifacts.
+1. Clarify the project positioning in `README.md`, removing the incomplete disclaimer and outlining production deployment expectations.
+2. Expand `docs/README.md` with authoritative deployment, security, and release guidance, cross-referencing `SECURITY.md` and packaging assets.
+3. Update `CHANGELOG.md` to record the documentation refresh and ensure references such as `docs/architecture.md` remain valid.
+4. Regenerate supporting artifacts (`STATE.md`, `PATCHES.md`, `VERIFICATIONS.md`) to capture the documentation updates and executed checks.

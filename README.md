@@ -1,8 +1,6 @@
 # Shamash
 
-Shamash is an experimental media server and client. It focuses on IPTV streaming while integrating well with existing library managers such as Sonarr and Radarr. The project currently provides a minimal server and command line client written in Python.
-
-THIS IS NOT COMPLETE IN ITS CURRENT STATE
+Shamash is a self-hosted media server and command-line client focused on IPTV streaming while integrating with existing library managers such as Sonarr and Radarr. The repository ships a FastAPI backend, a Python CLI, and reproducible PyInstaller executables that are published for every tagged release.
 
 ## Prerequisites
 
@@ -74,11 +72,7 @@ settings:
 * `SONARR_API_KEY` and `RADARR_API_KEY` – credentials for Sonarr and Radarr.
 * `SONARR_URL` and `RADARR_URL` – set custom service URLs.
 
-The bundled configuration ships with a placeholder `jwt_secret` value of
-`change_this_secret`. The server logs a **critical** warning on startup when the
-effective secret matches this default to highlight insecure deployments. Update
-`config/default.yaml` or set `JWT_SECRET` in production environments to silence
-the warning while leaving local development unaffected.
+The bundled configuration ships with a placeholder `jwt_secret` value of `change_this_secret`. The server logs a **critical** warning on startup when the effective secret matches this default to highlight insecure deployments. Update `config/default.yaml` or set `JWT_SECRET` in production environments to silence the warning while leaving local development unaffected.
 
 ## Configuration Files
 
@@ -101,19 +95,20 @@ Configure Sonarr and Radarr to download media into directories that Shamash can 
 
 Provide your IPTV playlist URLs in `config/default.yaml`. The server will stream channels from these playlists alongside your local media library.
 
-## Running in Production
+## Production Deployment
 
-Run Shamash behind a reverse proxy such as Nginx for HTTPS termination.
-Start the API using uvicorn directly or under a process manager:
+Production environments should prioritize hardened configuration, monitored processes, and repeatable packaging. A typical deployment flow is:
 
-```bash
-uvicorn server.app:app --host 0.0.0.0 --port 8000
-```
+1. **Harden credentials and configuration** – Generate a unique JWT signing secret, point `SHAMASH_DB_PATH` at a persistent volume, and set the Sonarr/Radarr API keys via environment variables or overrides in `config/default.yaml`.
+2. **Provision the database** – Use `server/db.py` helpers or the CLI to create at least one administrator account before exposing the API.
+3. **Choose the runtime**:
+   - Run `uvicorn server.app:app --host 0.0.0.0 --port 8000` under a supervisor such as `systemd`, `supervisord`, or a process manager like `pm2`.
+   - Deploy the published PyInstaller executables from `packaging/pyinstaller/` (also available on GitHub Releases) to simplify dependency management and pin dependencies.
+   - Or build and run the included container images via `docker-compose up` or your preferred orchestrator, mounting persistent volumes for the database and media libraries.
+4. **Terminate TLS at the edge** – Place Shamash behind a reverse proxy such as Nginx, Traefik, or Caddy to enforce HTTPS, rate limiting, and request logging.
+5. **Monitor and rotate secrets** – Forward logs to your observability stack, review failed authentication attempts, and rotate tokens or API keys when staff changes occur.
 
-Use `systemd` or a similar tool to manage the service and enable restarts.
-
-See the [`docs/`](docs/README.md) directory for additional design notes,
-including a high-level [architecture overview](docs/architecture.md).
+Review the [security guidelines](SECURITY.md) for hardening recommendations and the [`docs/`](docs/README.md) handbook for operational details, including the [architecture overview](docs/architecture.md).
 
 ## Docker Setup
 
@@ -123,15 +118,13 @@ Build the server image using the included `Dockerfile`:
 docker build -t shamash .
 ```
 
-Start the API along with optional Sonarr and Radarr containers via
-`docker-compose`:
+Start the API along with optional Sonarr and Radarr containers via `docker-compose`:
 
 ```bash
 docker-compose up
 ```
 
-This configuration mounts the repository into the container so code changes are
-reflected immediately during development.
+This configuration mounts the repository into the container so code changes are reflected immediately during development. Adjust volume mounts and environment variables before promoting the stack to production so the database and media files persist outside the container lifecycle.
 
 ## Release Process
 
