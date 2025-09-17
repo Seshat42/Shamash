@@ -1,7 +1,10 @@
 # Verification
 
-## `pre-commit run --all-files`
-- Passed: see chunk `b8865f`.
+## `pyinstaller packaging/pyinstaller/shamash_client.spec --noconfirm --distpath /tmp/pyi-dist --workpath /tmp/pyi-build`
+- Passed: see chunk `ac746f`.
+
+## `pyinstaller packaging/pyinstaller/shamash_server.spec --noconfirm --distpath /tmp/pyi-dist --workpath /tmp/pyi-build`
+- Passed: see chunk `fbbbfc`.
 
 ## `pytest`
-- Passed: see chunk `100c97`.
+- Passed: see chunk `84dc5c`.
