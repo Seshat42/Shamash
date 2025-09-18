@@ -1,7 +1,7 @@
 # Summary
-- Restricted `/metadata` endpoints in `server/app.py` by applying the existing admin-only dependency at the router level.
-- Updated metadata tests to authenticate with admin tokens and assert 401/403 responses for missing, invalid, or non-admin credentials.
-- Documented the admin requirement for metadata health and sync operations in `README.md` and `docs/README.md` with example commands for operators.
+- Refactored `/metadata/sync` to await asynchronous Sonarr and Radarr refresh helpers so metadata updates no longer block the FastAPI event loop.
+- Added `async_refresh_series` and `async_refresh_movies` implementations plus unit tests that validate their request payloads and error handling with `httpx.AsyncClient`.
+- Introduced a concurrency regression test that proves a slow metadata sync does not prevent servicing a simultaneous ping request.
 
 # Testing
 - `pytest`

@@ -41,3 +41,28 @@ def refresh_series() -> None:
     except RequestError as exc:
         logging.getLogger(__name__).error("Sonarr request failed: %s", exc)
         raise
+
+
+async def async_refresh_series(
+    client: httpx.AsyncClient | None = None,
+) -> None:
+    """Trigger a Sonarr refresh command without blocking the event loop."""
+
+    url = f"{SONARR_URL}/api/v3/command"
+    payload = {"name": "RefreshSeries"}
+    headers = _headers()
+
+    try:
+        if client is None:
+            async with httpx.AsyncClient() as async_client:
+                response = await async_client.post(
+                    url, json=payload, headers=headers, timeout=10
+                )
+        else:
+            response = await client.post(
+                url, json=payload, headers=headers, timeout=10
+            )
+        response.raise_for_status()
+    except RequestError as exc:
+        logging.getLogger(__name__).error("Sonarr request failed: %s", exc)
+        raise

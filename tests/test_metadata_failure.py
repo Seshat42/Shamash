@@ -1,5 +1,9 @@
-from fastapi.testclient import TestClient
+import asyncio
+
+import anyio
 import httpx
+import pytest
+from fastapi.testclient import TestClient
 
 from server import db
 from server.app import create_app
@@ -49,24 +53,24 @@ def _create_authenticated_client(
 
 
 def test_metadata_sync_handles_sonarr_error(monkeypatch):
-    def fail_series():
+    async def fail_series():
         raise httpx.RequestError("boom")
 
-    monkeypatch.setattr("server.app.refresh_series", fail_series)
+    monkeypatch.setattr("server.app.async_refresh_series", fail_series)
     client, admin_headers = _create_authenticated_client()
     resp = client.post("/metadata/sync", headers=admin_headers)
     assert resp.json()["status"] == "sonarr_error"
 
 
 def test_metadata_sync_handles_radarr_error(monkeypatch):
-    def fail_series():
-        pass
+    async def succeed_series():
+        return None
 
-    def fail_movies():
+    async def fail_movies():
         raise httpx.RequestError("nope")
 
-    monkeypatch.setattr("server.app.refresh_series", fail_series)
-    monkeypatch.setattr("server.app.refresh_movies", fail_movies)
+    monkeypatch.setattr("server.app.async_refresh_series", succeed_series)
+    monkeypatch.setattr("server.app.async_refresh_movies", fail_movies)
     client, admin_headers = _create_authenticated_client()
     resp = client.post("/metadata/sync", headers=admin_headers)
     assert resp.json()["status"] == "radarr_error"
@@ -153,3 +157,57 @@ def test_metadata_ping_requires_admin_token():
         "/metadata/ping", headers={"Authorization": "Bearer invalid"}
     )
     assert invalid_token.status_code == 401
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize("anyio_backend", ["asyncio"], indirect=True)
+async def test_metadata_sync_allows_concurrent_ping(monkeypatch):
+    start_event = anyio.Event()
+    finish_event = anyio.Event()
+    order: list[str] = []
+
+    async def slow_series() -> None:
+        start_event.set()
+        await finish_event.wait()
+
+    async def quick_movies() -> None:
+        order.append("movies_called")
+
+    monkeypatch.setattr("server.app.async_refresh_series", slow_series)
+    monkeypatch.setattr("server.app.async_refresh_movies", quick_movies)
+
+    db.add_user("admin", "pw", role="admin")
+    app = create_app()
+
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(
+        transport=transport, base_url="http://testserver"
+    ) as client:
+        login = await client.post(
+            "/auth/login", json={"username": "admin", "password": "pw"}
+        )
+        assert login.status_code == 200
+        token = login.json()["access_token"]
+        headers = {"Authorization": f"Bearer {token}"}
+
+        async def call_sync():
+            response = await client.post("/metadata/sync", headers=headers)
+            order.append("sync_complete")
+            return response
+
+        async def call_ping():
+            await start_event.wait()
+            response = await client.get("/users/ping")
+            order.append("ping_complete")
+            finish_event.set()
+            return response
+
+        with anyio.fail_after(1):
+            sync_response, ping_response = await asyncio.gather(
+                call_sync(), call_ping()
+            )
+
+    assert ping_response.status_code == 200
+    assert sync_response.json()["status"] == "synchronized"
+    assert order[0] == "ping_complete"
+    assert order[-1] == "sync_complete"
