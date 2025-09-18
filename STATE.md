@@ -11,6 +11,9 @@
 - T71: Restrict metadata sync and ping endpoints to administrator tokens.
 - T72: Update metadata tests to authenticate access and assert 401/403 responses for unauthorized callers.
 - T73: Document the metadata admin requirement for operators in README.md and docs/README.md.
+- T80: Offload Sonarr and Radarr metadata sync calls to asynchronous helpers so the FastAPI event loop stays responsive.
+- T81: Expand Sonarr and Radarr helper modules with async variants and extend unit tests to validate their behavior.
+- T82: Add regression coverage proving a concurrent request completes while metadata synchronization is in progress.
 
 # Cognitive Ledger
 - Cycle 1: Inspected repository structure and existing placeholder endpoints.
@@ -105,6 +108,15 @@
 - Cycle 78: Documented the metadata admin requirement in README.md and docs/README.md.
 - Cycle 79: Executed the pytest suite to confirm the admin-guarded metadata behavior.
 
+- Cycle 80: Reviewed the asynchronous metadata sync requirements, compared thread offloading, async clients, and background task
+  strategies, then updated the implementation plan accordingly.
+- Cycle 81: Added async refresh helpers to the Sonarr and Radarr modules and refactored `/metadata/sync` to await them without
+  blocking the event loop.
+- Cycle 82: Extended Sonarr and Radarr tests with async client coverage and introduced a concurrency regression test using the
+  ASGI transport.
+- Cycle 83: Constrained async tests to the asyncio backend and ran the full pytest suite to validate the non-blocking metadata
+  flow.
+
 # Decision Log
 - D1: Chose database `SELECT 1` query to verify connectivity for ingestion, users, and streaming health.
 - D2: Implemented HTTP HEAD requests to Sonarr and Radarr for metadata health without requiring sync commands.
@@ -124,3 +136,5 @@
 - D16: Packaged tag-triggered release artifacts per platform and automated publishing with GitHub Actions releases.
 - D17: Secured media ingestion by applying an admin-only dependency at the router level to cover all `/ingestion` endpoints.
 - D18: Reused the router-level admin dependency to guard all `/metadata` endpoints so syncs and health checks require elevated tokens.
+- D19: Selected async `httpx.AsyncClient` helpers over thread pools or background tasks to keep metadata refresh semantics while
+  preventing event-loop blocking.

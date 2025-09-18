@@ -41,3 +41,28 @@ def refresh_movies() -> None:
     except RequestError as exc:
         logging.getLogger(__name__).error("Radarr request failed: %s", exc)
         raise
+
+
+async def async_refresh_movies(
+    client: httpx.AsyncClient | None = None,
+) -> None:
+    """Trigger a Radarr refresh command without blocking the event loop."""
+
+    url = f"{RADARR_URL}/api/v3/command"
+    payload = {"name": "RefreshMovie"}
+    headers = _headers()
+
+    try:
+        if client is None:
+            async with httpx.AsyncClient() as async_client:
+                response = await async_client.post(
+                    url, json=payload, headers=headers, timeout=10
+                )
+        else:
+            response = await client.post(
+                url, json=payload, headers=headers, timeout=10
+            )
+        response.raise_for_status()
+    except RequestError as exc:
+        logging.getLogger(__name__).error("Radarr request failed: %s", exc)
+        raise

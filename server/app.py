@@ -13,8 +13,8 @@ from sqlalchemy import text
 from . import db
 from .auth import TokenClaims, auth_router, require_role, token_required
 from .config import resolve_jwt_secret, warn_if_default_jwt_secret
-from .integrations.radarr import RADARR_API_KEY, RADARR_URL, refresh_movies
-from .integrations.sonarr import SONARR_API_KEY, SONARR_URL, refresh_series
+from .integrations.radarr import RADARR_API_KEY, RADARR_URL, async_refresh_movies
+from .integrations.sonarr import SONARR_API_KEY, SONARR_URL, async_refresh_series
 
 
 # Placeholder routers for future modules
@@ -150,11 +150,11 @@ async def metadata_ping() -> dict[str, str]:
 async def metadata_sync() -> dict[str, str]:
     """Synchronize metadata with Sonarr and Radarr."""
     try:
-        refresh_series()
+        await async_refresh_series()
     except httpx.RequestError as exc:
         return {"status": "sonarr_error", "detail": str(exc)}
     try:
-        refresh_movies()
+        await async_refresh_movies()
     except httpx.RequestError as exc:
         return {"status": "radarr_error", "detail": str(exc)}
     except Exception as exc:  # pragma: no cover - catch unexpected errors
