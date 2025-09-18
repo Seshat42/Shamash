@@ -1,6 +1,6 @@
 # Plan
 
-1. Clarify the project positioning in `README.md`, removing the incomplete disclaimer and outlining production deployment expectations.
-2. Expand `docs/README.md` with authoritative deployment, security, and release guidance, cross-referencing `SECURITY.md` and packaging assets.
-3. Update `CHANGELOG.md` to record the documentation refresh and ensure references such as `docs/architecture.md` remain valid.
-4. Regenerate supporting artifacts (`STATE.md`, `PATCHES.md`, `VERIFICATIONS.md`) to capture the documentation updates and executed checks.
+1. Protect `/ingestion` endpoints by requiring admin credentials while preserving the existing path validation behavior.
+2. Update ingestion tests to authenticate as admin for positive cases and verify non-admin or unauthenticated calls receive 403 responses.
+3. Document the administrative requirement for ingestion workflows in README.md and docs/README.md so operators adjust credentials accordingly.
+4. Rebuild supporting artifacts (STATE.md, PATCHES.md, VERIFICATIONS.md, TODO.md) after implementing code and documentation changes.

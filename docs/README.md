@@ -65,13 +65,13 @@ The automation consumes the specs in `packaging/pyinstaller/` to guarantee parit
 
 ## Authentication
 
-Use `/auth/login` to obtain a JWT token. Include the token in the `Authorization: Bearer` header when calling protected endpoints such as `/stream/ping`.
+Use `/auth/login` to obtain a JWT token. Include the token in the `Authorization: Bearer` header when calling protected endpoints such as `/ingestion`, `/stream/ping`, or `/users`.
 
 ## Health Checks
 
 The API exposes lightweight health endpoints:
 
-* `GET /ingestion/ping` &ndash; verifies database connectivity for media ingestion.
+* `GET /ingestion/ping` &ndash; verifies database connectivity for media ingestion (requires an admin token).
 * `GET /metadata/ping` &ndash; checks reachability of Sonarr and Radarr and the database. The endpoint performs authenticated status requests and reports `auth_failed` when API keys are missing or invalid.
 * `GET /users/ping` &ndash; verifies database connectivity for user management.
 * `GET /stream/ping` &ndash; verifies database connectivity for streaming (requires a token).
@@ -98,4 +98,4 @@ Set the `JWT_SECRET` variable or edit `config/default.yaml` to configure the sec
 
 ## Media Ingestion
 
-The `POST /ingestion/` endpoint stores media metadata. The `path` field must be either an `http://` or `https://` URL or a local filesystem path that resolves to an existing file. Local paths are expanded, resolved, and rejected when they contain traversal segments such as `..` or refer to directories or missing files. Provide fully qualified URLs for remote media to avoid validation errors.
+The `POST /ingestion/` endpoint stores media metadata. All `/ingestion` operations require administrator credentials so only trusted operators ingest media. The `path` field must be either an `http://` or `https://` URL or a local filesystem path that resolves to an existing file. Local paths are expanded, resolved, and rejected when they contain traversal segments such as `..` or refer to directories or missing files. Provide fully qualified URLs for remote media to avoid validation errors.

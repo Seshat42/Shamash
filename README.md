@@ -22,9 +22,10 @@ The server starts an HTTP API on the specified host and port.
 
 Create a user in the database using `server/db.py.add_user()` or through a
 future management endpoint. Users have a `role` of either `user` or `admin`.
-Administrative actions, such as managing other accounts, require an `admin`
-token. Obtain a token via `/auth/login` and pass it as a `Bearer` token when
-accessing protected routes such as `/stream/ping` or `/users`.
+Administrative actions, such as managing other accounts or ingesting media,
+require an `admin` token. Obtain a token via `/auth/login` and pass it as a
+`Bearer` token when accessing protected routes such as `/ingestion`,
+`/stream/ping`, or `/users`.
 
 Issued tokens embed the user's role claim so FastAPI dependencies can authorize
 requests without repeating a database lookup. The role claim is signed with the
@@ -34,10 +35,14 @@ rest of the JWT payload, ensuring tampering is rejected during verification.
 
 Shamash exposes several lightweight health checks:
 
-* `GET /ingestion/ping` &ndash; database connectivity for media ingestion.
+* `GET /ingestion/ping` &ndash; database connectivity for media ingestion (requires
+  an admin token).
 * `GET /metadata/ping` &ndash; reachability of Sonarr and Radarr plus database status.
 * `GET /users/ping` &ndash; database connectivity for user management.
 * `GET /stream/ping` &ndash; database connectivity for streaming (requires a token).
+
+All `/ingestion` endpoints require administrator credentials so that only trusted
+operators can add new media entries.
 
 ## Running the Client
 

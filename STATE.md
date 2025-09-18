@@ -4,8 +4,10 @@
 - R3: Update documentation and changelog alongside code modifications.
 
 # Task Requirements
-- T44: Revise README and documentation to present production-ready guidance, including deployment, security, and release processe
-s.
+- T44: Revise README and documentation to present production-ready guidance, including deployment, security, and release processes.
+- T68: Require administrator credentials for ingestion endpoints.
+- T69: Update ingestion tests to exercise admin-only access and 403 responses for unauthorized callers.
+- T70: Document the ingestion admin requirement in README.md and docs/README.md.
 
 # Cognitive Ledger
 - Cycle 1: Inspected repository structure and existing placeholder endpoints.
@@ -86,6 +88,13 @@ s.
 - Cycle 65: Rewrote docs/README.md with deployment, security, and release procedures referencing PyInstaller packaging assets and SECURITY guidance.
 - Cycle 66: Added an unreleased changelog entry summarizing the documentation refresh.
 - Cycle 67: Executed the pytest suite to confirm documentation updates kept the project stable.
+- Cycle 68: Reviewed ingestion endpoints and related tests to scope the admin access requirement.
+- Cycle 69: Updated PLANS.md with steps for securing ingestion and documenting the change.
+- Cycle 70: Added an admin-only dependency to the `/ingestion` routes in server/app.py.
+- Cycle 71: Updated ingestion tests to authenticate with admin tokens and assert 403 responses for unauthorized callers.
+- Cycle 72: Documented the ingestion admin requirement in README.md and docs/README.md.
+- Cycle 73: Updated tests/test_app.py to authenticate ingestion health checks with an admin token.
+- Cycle 74: Ran the full pytest suite to confirm the admin-guarded ingestion behavior.
 
 # Decision Log
 - D1: Chose database `SELECT 1` query to verify connectivity for ingestion, users, and streaming health.
@@ -104,3 +113,4 @@ s.
 - D14: Standardized formatting and linting by adopting `pre-commit` with `black` and `flake8`, and mirrored the workflow in GitHub Actions.
 - D15: Stored PyInstaller specs in `packaging/pyinstaller` and resolved the project root via `SPECPATH` for portable builds.
 - D16: Packaged tag-triggered release artifacts per platform and automated publishing with GitHub Actions releases.
+- D17: Secured media ingestion by applying an admin-only dependency at the router level to cover all `/ingestion` endpoints.

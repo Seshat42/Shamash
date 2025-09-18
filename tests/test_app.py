@@ -14,12 +14,14 @@ def test_app_includes_routes():
     assert "/stream/ping" in paths
     assert "/metadata/sync" in paths
 
-    db.add_user("alice", "pw")
+    db.add_user("alice", "pw", role="admin")
     token = client.post(
         "/auth/login", json={"username": "alice", "password": "pw"}
     ).json()["access_token"]
 
-    ingest = client.get("/ingestion/ping")
+    ingest = client.get(
+        "/ingestion/ping", headers={"Authorization": f"Bearer {token}"}
+    )
     assert ingest.json()["status"] in {"ok", "db_unreachable"}
 
     meta = client.get("/metadata/ping").json()
