@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
 import httpx
 
+from server import db
 from server.app import create_app
 
 
@@ -28,14 +29,32 @@ def _stub_metadata_client(monkeypatch, status_by_host, header_log):
     monkeypatch.setattr("server.app.httpx.AsyncClient", DummyAsyncClient)
 
 
+def _login(client: TestClient, username: str, password: str) -> dict[str, str]:
+    response = client.post(
+        "/auth/login", json={"username": username, "password": password}
+    )
+    assert response.status_code == 200
+    token = response.json()["access_token"]
+    return {"Authorization": f"Bearer {token}"}
+
+
+def _create_authenticated_client(
+    username: str = "admin", role: str = "admin"
+) -> tuple[TestClient, dict[str, str]]:
+    db.add_user(username, "pw", role=role)
+    app = create_app()
+    client = TestClient(app)
+    headers = _login(client, username, "pw")
+    return client, headers
+
+
 def test_metadata_sync_handles_sonarr_error(monkeypatch):
     def fail_series():
         raise httpx.RequestError("boom")
 
     monkeypatch.setattr("server.app.refresh_series", fail_series)
-    app = create_app()
-    client = TestClient(app)
-    resp = client.post("/metadata/sync")
+    client, admin_headers = _create_authenticated_client()
+    resp = client.post("/metadata/sync", headers=admin_headers)
     assert resp.json()["status"] == "sonarr_error"
 
 
@@ -48,9 +67,8 @@ def test_metadata_sync_handles_radarr_error(monkeypatch):
 
     monkeypatch.setattr("server.app.refresh_series", fail_series)
     monkeypatch.setattr("server.app.refresh_movies", fail_movies)
-    app = create_app()
-    client = TestClient(app)
-    resp = client.post("/metadata/sync")
+    client, admin_headers = _create_authenticated_client()
+    resp = client.post("/metadata/sync", headers=admin_headers)
     assert resp.json()["status"] == "radarr_error"
 
 
@@ -68,9 +86,8 @@ def test_metadata_ping_reports_invalid_sonarr_key(monkeypatch):
         header_log,
     )
 
-    app = create_app()
-    client = TestClient(app)
-    resp = client.get("/metadata/ping")
+    client, admin_headers = _create_authenticated_client()
+    resp = client.get("/metadata/ping", headers=admin_headers)
     payload = resp.json()
 
     assert payload["sonarr"] == "auth_failed"
@@ -94,9 +111,8 @@ def test_metadata_ping_reports_invalid_radarr_key(monkeypatch):
         header_log,
     )
 
-    app = create_app()
-    client = TestClient(app)
-    resp = client.get("/metadata/ping")
+    client, admin_headers = _create_authenticated_client()
+    resp = client.get("/metadata/ping", headers=admin_headers)
     payload = resp.json()
 
     assert payload["sonarr"] == "ok"
@@ -104,3 +120,36 @@ def test_metadata_ping_reports_invalid_radarr_key(monkeypatch):
     assert payload["database"] == "ok"
     assert header_log["http://sonarr.test"].get("X-Api-Key") == "valid-sonarr-key"
     assert header_log["http://radarr.test"].get("X-Api-Key") == "bad-radarr-key"
+
+
+def test_metadata_sync_requires_admin_token():
+    app = create_app()
+    client = TestClient(app)
+
+    missing_token = client.post("/metadata/sync")
+    assert missing_token.status_code == 403
+
+    invalid_token = client.post(
+        "/metadata/sync", headers={"Authorization": "Bearer invalid"}
+    )
+    assert invalid_token.status_code == 401
+
+
+def test_metadata_sync_rejects_non_admin_role():
+    client, user_headers = _create_authenticated_client("user", role="user")
+
+    response = client.post("/metadata/sync", headers=user_headers)
+    assert response.status_code == 403
+
+
+def test_metadata_ping_requires_admin_token():
+    app = create_app()
+    client = TestClient(app)
+
+    missing_token = client.get("/metadata/ping")
+    assert missing_token.status_code == 403
+
+    invalid_token = client.get(
+        "/metadata/ping", headers={"Authorization": "Bearer invalid"}
+    )
+    assert invalid_token.status_code == 401

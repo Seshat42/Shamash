@@ -19,18 +19,20 @@ def test_app_includes_routes():
         "/auth/login", json={"username": "alice", "password": "pw"}
     ).json()["access_token"]
 
+    admin_headers = {"Authorization": f"Bearer {token}"}
+
     ingest = client.get(
-        "/ingestion/ping", headers={"Authorization": f"Bearer {token}"}
+        "/ingestion/ping", headers=admin_headers
     )
     assert ingest.json()["status"] in {"ok", "db_unreachable"}
 
-    meta = client.get("/metadata/ping").json()
+    meta = client.get("/metadata/ping", headers=admin_headers).json()
     assert "metadata placeholder" not in meta.values()
 
     user_status = client.get("/users/ping").json()["status"]
     assert user_status in {"ok", "db_unreachable"}
 
-    stream = client.get("/stream/ping", headers={"Authorization": f"Bearer {token}"})
+    stream = client.get("/stream/ping", headers=admin_headers)
     assert stream.json()["status"] in {"ok", "db_unreachable"}
 
 
