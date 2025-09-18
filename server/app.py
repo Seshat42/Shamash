@@ -18,7 +18,11 @@ from .integrations.sonarr import SONARR_API_KEY, SONARR_URL, refresh_series
 
 
 # Placeholder routers for future modules
-media_ingestion_router = APIRouter(prefix="/ingestion", tags=["ingestion"])
+media_ingestion_router = APIRouter(
+    prefix="/ingestion",
+    tags=["ingestion"],
+    dependencies=[Depends(require_role("admin"))],
+)
 metadata_sync_router = APIRouter(prefix="/metadata", tags=["metadata"])
 user_management_router = APIRouter(prefix="/users", tags=["users"])
 streaming_router = APIRouter(prefix="/stream", tags=["stream"])
