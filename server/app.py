@@ -23,7 +23,11 @@ media_ingestion_router = APIRouter(
     tags=["ingestion"],
     dependencies=[Depends(require_role("admin"))],
 )
-metadata_sync_router = APIRouter(prefix="/metadata", tags=["metadata"])
+metadata_sync_router = APIRouter(
+    prefix="/metadata",
+    tags=["metadata"],
+    dependencies=[Depends(require_role("admin"))],
+)
 user_management_router = APIRouter(prefix="/users", tags=["users"])
 streaming_router = APIRouter(prefix="/stream", tags=["stream"])
 media_router = APIRouter(prefix="/media", tags=["media"])

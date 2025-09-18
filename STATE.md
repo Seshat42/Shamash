@@ -8,6 +8,9 @@
 - T68: Require administrator credentials for ingestion endpoints.
 - T69: Update ingestion tests to exercise admin-only access and 403 responses for unauthorized callers.
 - T70: Document the ingestion admin requirement in README.md and docs/README.md.
+- T71: Restrict metadata sync and ping endpoints to administrator tokens.
+- T72: Update metadata tests to authenticate access and assert 401/403 responses for unauthorized callers.
+- T73: Document the metadata admin requirement for operators in README.md and docs/README.md.
 
 # Cognitive Ledger
 - Cycle 1: Inspected repository structure and existing placeholder endpoints.
@@ -96,6 +99,12 @@
 - Cycle 73: Updated tests/test_app.py to authenticate ingestion health checks with an admin token.
 - Cycle 74: Ran the full pytest suite to confirm the admin-guarded ingestion behavior.
 
+- Cycle 75: Reviewed metadata admin-access requirements and refreshed the implementation plan.
+- Cycle 76: Added an admin-only dependency to the metadata router in server/app.py.
+- Cycle 77: Updated metadata tests to authenticate requests and assert 401/403 outcomes for missing or non-admin tokens.
+- Cycle 78: Documented the metadata admin requirement in README.md and docs/README.md.
+- Cycle 79: Executed the pytest suite to confirm the admin-guarded metadata behavior.
+
 # Decision Log
 - D1: Chose database `SELECT 1` query to verify connectivity for ingestion, users, and streaming health.
 - D2: Implemented HTTP HEAD requests to Sonarr and Radarr for metadata health without requiring sync commands.
@@ -114,3 +123,4 @@
 - D15: Stored PyInstaller specs in `packaging/pyinstaller` and resolved the project root via `SPECPATH` for portable builds.
 - D16: Packaged tag-triggered release artifacts per platform and automated publishing with GitHub Actions releases.
 - D17: Secured media ingestion by applying an admin-only dependency at the router level to cover all `/ingestion` endpoints.
+- D18: Reused the router-level admin dependency to guard all `/metadata` endpoints so syncs and health checks require elevated tokens.
